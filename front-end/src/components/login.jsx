@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import "../App.css";
 import { useNavigate } from "react-router-dom";
 
-const LOGIN = ({ changeFunc }) => {
+const LOGIN = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -56,7 +56,7 @@ const LOGIN = ({ changeFunc }) => {
             setMsg("Logged in successfully!! Redirecting...");
             localStorage.setItem("login", "true");
             localStorage.setItem("email", formData.email);
-            changeFunc();
+            navget("/");
             setTimeout(() => {
               console.log("logging in");
             }, 3000);
