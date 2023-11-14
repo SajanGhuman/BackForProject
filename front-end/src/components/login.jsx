@@ -40,7 +40,7 @@ const LOGIN = () => {
         method: "POST",
         headers: {
           Accept: "application/json",
-          "Content-Type": "application/json",
+          "Content-Type": "application/json", 
         },
         body: JSON.stringify(formData),
       })
@@ -48,10 +48,10 @@ const LOGIN = () => {
           console.log(res);
           return res.json();
         })
-        .then((res) => {
-          console.log(res[0]);
-          if (res[0].error === true) {
-            setError(res[0].result);
+        .then((data) => {
+          console.log(data[0]);
+          if (data[0].error === true) {
+            setError(data[0].result);
           } else {
             setMsg("Logged in successfully!! Redirecting...");
             localStorage.setItem("login", "true");
@@ -63,7 +63,6 @@ const LOGIN = () => {
           }
         })
         .catch((err) => {
-          setError(res[0].result);
           console.log("Error:", err);
         });
     } else {

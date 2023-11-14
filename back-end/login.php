@@ -1,5 +1,4 @@
 <?php
-session_start();
 require('connect.php');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
@@ -13,10 +12,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $data['email'];
     $pass = $data['password'];
 
-    $_SESSION["email"] = $email;
-    $_SESSION["pass"] = $pass;
-
-
     $result = '';
 
     if ($email != "" and $pass != "") {
@@ -29,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = false;
 
         if ($row) {
-            if ($pass != $row["password"]) {
+            if (password_verify($pass, $row["password"])) {
                 $result = "Invalid Password";
                 $error = true;
             } else {

@@ -8,6 +8,7 @@ body {
 }
 
 .nav__ul {
+  user-select: none;
   display: flex;
   gap: 1em;
   list-style: none;
@@ -39,6 +40,7 @@ body {
 }
 
 .cube-canvas {
+  user-select: none;
   position: relative;
   left: -1em;
   top: -1.5em;
@@ -268,4 +270,9 @@ body {
   max-width: 150px;
   position: relative;
   left: 50px;
+}
+
+.alg__table{
+  position: relative;
+  top: 60rem;
 }
