@@ -26,25 +26,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $statement->execute();
 
         $row = $statement->fetch(PDO::FETCH_ASSOC);
-        $error=false;
+        $error = false;
 
         if ($row) {
             if ($pass != $row["password"]) {
                 $result = "Invalid Password";
-                $true=true;
+                $error = true;
             } else {
                 $result = "Logged in successfully! Redirecting...";
-                $true=false;
+                $hashedPass = password_hash($row["password"], PASSWORD_DEFAULT);
+                $error = false;
             }
         } else {
             $result = "Email does not exist";
-            $error=true;
+            $error = true;
         }
 
     } else {
         $result = '';
     }
-    $response[] = array("result" => $result, "error" =>$error, "name" => $row['name']);
+    $response[] = array("result" => $result, "error" => $error);
     echo json_encode($response);
 }
 

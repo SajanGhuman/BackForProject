@@ -49,22 +49,22 @@ const LOGIN = () => {
           return res.json();
         })
         .then((res) => {
-          console.log(res);
-          if (res.error === true) {
-            setError("Match Not Found! Access Denied");
+          console.log(res[0]);
+          if (res[0].error === true) {
+            setError(res[0].result);
           } else {
             setMsg("Logged in successfully!! Redirecting...");
             localStorage.setItem("login", "true");
             localStorage.setItem("email", formData.email);
-            navget("/");
             setTimeout(() => {
               console.log("logging in");
+              navget("/");
             }, 3000);
           }
         })
         .catch((err) => {
-          setError(err);
-          console.log("Error:::", err);
+          setError(res[0].result);
+          console.log("Error:", err);
         });
     } else {
       e.preventDefault();
