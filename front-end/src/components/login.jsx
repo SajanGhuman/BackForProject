@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import "../App.css";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-const LOGIN = ({ onLogin }) => {
+const LOGIN = ({ changeFunc }) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -43,7 +43,7 @@ const LOGIN = ({ onLogin }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
-      })    
+      })
         .then((res) => {
           console.log(res);
           return res.json();
@@ -54,16 +54,17 @@ const LOGIN = ({ onLogin }) => {
             setError("Match Not Found! Access Denied");
           } else {
             setMsg("Logged in successfully!! Redirecting...");
+            localStorage.setItem("login", "true");
+            localStorage.setItem("email", formData.email);
+            changeFunc();
             setTimeout(() => {
-              localStorage.setItem("login", "true");
-              localStorage.setItem("email", formData.email);
-              navget("/");
-            }, 5000);
+              console.log("logging in");
+            }, 3000);
           }
         })
         .catch((err) => {
           setError(err);
-          console.log("Error:", err);
+          console.log("Error:::", err);
         });
     } else {
       e.preventDefault();
@@ -88,7 +89,7 @@ const LOGIN = ({ onLogin }) => {
               id="email"
               value={formData.email}
               placeholder="Enter Your Email"
-              onChange={e => handleChange(e, "email")}
+              onChange={(e) => handleChange(e, "email")}
             />
           </li>
           <li>

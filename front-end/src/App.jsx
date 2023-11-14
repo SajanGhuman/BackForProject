@@ -13,7 +13,7 @@ import ADDFL from "./components/addFl";
 import ADD from "./components/add";
 import ADDOLL from "./components/addoll";
 import ADDPLL from "./components/addpll";
-import Logout from "./components/logout";
+import Logout from "./components/logoutButton/";
 import Need from "./components/need";
 import Dashboard from "./components/dashboard";
 import Navbar from "./components/navbar";
