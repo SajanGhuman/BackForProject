@@ -1,16 +1,19 @@
 import "../App.css";
-import { useEffect, useState } from "react";
-import { Routes, Route, Link, useNavigate } from "react-router-dom";
+import { useEffect, useState, useContext, createContext } from "react";
+import { Routes, Route, Link, useNavigate, useParams } from "react-router-dom";
 
 const EDIT = () => {
   const navget = useNavigate();
   const [error, setError] = useState("");
   const [msg, setMsg] = useState("");
 
+  const { algID } = useParams();
+
   const [formData, setFormData] = useState({
+    algID: algID,
     name: "",
     notation: "",
-    description: "",
+    type: "",
   });
 
   const handleChange = (e, type) => {
@@ -31,24 +34,20 @@ const EDIT = () => {
           setError("Notation Is Empty");
         }
         break;
-      case "description":
+      case "type":
         setError("");
-        setFormData({ ...formData, description: e.target.value });
+        setFormData({ ...formData, type: e.target.value });
         console.log(formData);
         if (e.target.value === "") {
-          setError("Description Is Empty");
+          setError("type Is Empty");
         }
         break;
     }
   };
 
   useEffect(() => {
-    if (
-      formData.name !== "" &&
-      formData.notation !== "" &&
-      formData.description !== ""
-    ) {
-      fetch("http://localhost/react-project/back-end/edit.php")
+    if (algID !== "") {
+      fetch(`http://localhost/react-project/back-end/edit.php?algID=${algID}`)
         .then((res) => {
           console.log(res);
           return res.json();
@@ -56,26 +55,25 @@ const EDIT = () => {
         .then((res) => {
           console.log(res);
           if (res.error === true) {
-            setError("Validation Failed!! Try Again");
+            setError("Error occured");
           } else {
-            setMsg("Algorithm Fetched successfully!! Redirecting...");
+            setFormData({...formData,
+              name: res.result[0].name || "",
+              notation: res.result[0].notation || "",
+              type: res.result[0].type || "",
+            });
           }
         })
         .catch((err) => {
-          setError(err);
           console.log("Error:", err);
         });
     }
-  }, [formData]);
+  }, [algID]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (
-      formData.name !== "" &&
-      formData.notation !== "" &&
-      formData.description !== ""
-    ) {
-      fetch("http://localhost/react-project/back-end/post.php", {
+    if (formData.algID !== "") {
+      fetch("http://localhost/react-project/back-end/editForm.php", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -90,11 +88,11 @@ const EDIT = () => {
         .then((res) => {
           console.log(res);
           if (res.error === true) {
-            setError("Validation Failed!! Try Again");
+            setError("Valiation Failed!! Try Again");
           } else {
             setMsg("Algorithm Added successfully!! Redirecting...");
             setTimeout(() => {
-              navget("/");
+              navget("/dashboard");
             }, 3000);
           }
         })
@@ -108,16 +106,16 @@ const EDIT = () => {
     }
   };
   return (
-    <div className="add__div">
+    <div className="edit__div">
       {msg !== "" ? (
         <span className="success">{msg}</span>
       ) : (
         <span className="error">{error}</span>
       )}
       <form onSubmit={(e) => handleSubmit(e)}>
-        <ul className="add__ul">
+        <ul className="edit__ul">
           <li>
-            <label htmlFor="name">Name:</label>
+            <label htmlFor="name">Name: </label>
             <input
               type="text"
               name="name"
@@ -127,29 +125,30 @@ const EDIT = () => {
             />
           </li>
           <li>
-            <label htmlFor="notation">Notation:</label>
+            <label htmlFor="notation">Notation: </label>
             <input
               type="text"
               name="notation"
-              id="notation"
               value={formData.notation}
               placeholder="Enter Alg Notation"
               onChange={(e) => handleChange(e, "notation")}
             />
           </li>
           <li>
-            <label htmlFor="description">Description:</label>
-            <input
-              type="text"
-              name="description"
-              id="description"
-              value={formData.description}
-              placeholder="Enter Alg description"
-              onChange={(e) => handleChange(e, "description")}
-            />
+            <label htmlFor="type">Type: </label>
+            <select
+              value={formData.type}
+              name="type"
+              id="type"
+              onChange={(e) => handleChange(e, "type")}
+            >
+              <option value="f2l">F2l</option>
+              <option value="oll">OLL</option>
+              <option value="pll">PLL</option>
+            </select>
           </li>
           <button type="submit" className="add__submit">
-            Add Algorithm
+            Update Algorithm
           </button>
         </ul>
       </form>

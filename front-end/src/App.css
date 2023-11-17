@@ -4,6 +4,7 @@ body {
   background-color: black;
   color: white;
   font-family: Arial, Helvetica, sans-serif;
+  height: 200em;
   overflow-x: hidden;
 }
 
@@ -104,67 +105,40 @@ body {
   width: 11em;
 }
 
-.f2l__div {
-  height: 20vh;
-  width: 20vh;
+.add__div {
+  height: 50px;
+  width: 120px;
+  background-color: yellow;
+  border-radius: 15%;
+  transition: all 0.5s;
+  color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.oll__div {
-  height: 20vh;
-  width: 20vh;
+.add__div:hover {
+  height: 60px;
+  width: 125px;
+  transform: translateY(-5px);
+  color: black;
 }
 
-.pll__div {
-  height: 20vh;
-  width: 20vh;
-}
-
-.f2l__table {
-  position: relative;
-  left: 50%;
-  top: 1200px;
-  width: auto;
-  height: auto;
-  font-size: 20px;
-}
-
-.oll__table {
-  position: relative;
-  left: 50%;
-  top: 1400px;
-  width: auto;
-  height: auto;
-  font-size: 20px;
-}
-
-.pll__table {
-  position: relative;
-  left: 200px;
-  top: 800px;
-  width: auto;
-  height: auto;
-  font-size: 20px;
-}
-
-.table__header__f2l {
-  position: relative;
-  left: 530px;
-  top: -57em;
-  transform: translate(-50%, -50%);
-}
-
-.table__header__oll {
+.add__main__div__1 {
   position: absolute;
-  left: 530px;
-  top: -68em;
-  transform: translate(-50%, -50%);
+  left: 2em;
+  top: 7em;
 }
 
-.table__header__pll {
-  position: relative;
-  left: 670px;
-  top: -700px;
-  transform: translate(-50%, -50%);
+.add__main__div__2 {
+  position: absolute;
+  left: 10em;
+  top: 7em;
+}
+
+.add__text {
+  font-size: 12.5px;
+  font-weight: 600;
 }
 
 .tr__div {
@@ -195,17 +169,24 @@ body {
 }
 
 .login__div {
-  position: relative;
+  position: absolute;
   left: 600px;
-  top: -100px;
+  top: 200px;
   font-size: 30px;
 }
 
-.add__div {
-  position: relative;
+.add__div__main {
+  position: absolute;
   left: 600px;
-  top: -100px;
+  top: 150px;
   font-size: 30px;
+}
+
+.msg__div {
+  position: absolute;
+  left: 85px;
+  top: -50px;
+  width: 1000px;
 }
 
 .login__ul {
@@ -226,13 +207,48 @@ body {
   justify-content: center;
 }
 
+.edit__div {
+  position: absolute;
+  left: 43em;
+  top: 10em;
+  height: 100px;
+  width: 120px;
+  border-radius: 15%;
+  transition: all 0.5s;
+  color: black;
+}
+
+.edit__ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  align-items: center;
+  justify-content: center;
+}
+
+.edit__ul li label {
+  color: white;
+  font-size: 30px;
+}
+
+.edit__ul li input {
+  color: white;
+  font-size: 15px;
+}
+
+.edit__ul li select {
+  color: white;
+  font-size: 15px;
+}
+
 .login__submit {
   background-color: rgb(255, 255, 184);
   color: black;
 }
 
 .add__submit {
-  background-color: rgb(255, 255, 184);
+  background-color: yellow;
   color: black;
 }
 
@@ -272,7 +288,116 @@ body {
   left: 50px;
 }
 
-.alg__table{
+/*-----------Table----------*/
+table th td {
+  padding: 1rem;
+}
+
+.alg__table {
+  position: absolute;
+  top: 10rem;
+  left: 30rem;
+  padding: 2em;
+}
+
+.oll__table {
+  position: absolute;
+  top: 10rem;
+  left: 30rem;
+  padding: 2em;
+}
+
+.pll__table {
+  position: absolute;
+  top: 10rem;
+  left: 30rem;
+  padding: 2em;
+}
+
+.f2l__table {
+  position: absolute;
+  top: 10rem;
+  left: 30rem;
+  padding: 2em;
+}
+
+.type__options {
+  position: absolute;
+  left: 25%;
+  top: 15%;
+}
+
+.del__button {
+  position: absolute;
+  left: 50em;
+  top: 20em;
+  background-color: yellow;
+  color: black;
+  font-size: 15px;
+  font-weight: 700;
+  width: 10em;
+  height: 5em;
+  margin-left: 1em;
+  transition: all 0.5s;
+}
+
+.del__button:hover {
+  width: 10.5em;
+  height: 5.5em;
+  transform: translateY(-5px);
+}
+
+.go__back__button {
+  position: absolute;
+  left: 40em;
+  top: 20em;
+  background-color: yellow;
+  color: black;
+  font-size: 15px;
+  font-weight: 700;
+  width: 10em;
+  height: 5em;
+  margin-right: 1em;
+  transition: all 0.5s;
+}
+
+.go__back__button:hover {
+  width: 10.5em;
+  height: 5.5em;
+  transform: translateY(-5px);
+}
+
+.sure__text {
+  position: absolute;
+  left: 6em;
+  top: 2.5em;
+}
+
+.success{
+  color: white;
+}
+
+.error{
+  color: white;
+}
+
+.sort__div{
+  display:flex;
+  gap: 1em;
   position: relative;
-  top: 60rem;
+  top: -69.6em;
+  left: 29em;
+  width: 10em;
+  height: 1.4em;
+  position: relative;
+}
+
+.sort__remove__button{
+  position: relative;
+  top: -1em;
+  height: 3em;
+  width: 20em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

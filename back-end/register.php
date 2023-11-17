@@ -16,15 +16,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $result = "You Have Resgistered Succesfully";
     $error = false;
-    if ($name != "" && $email != "" && $pass1 != "" && $pass2 != "" && $pass1 === $pass2) {
-        $query = "INSERT INTO users (name, email, password) VALUES (:name, :email, :pass)";
+    if ($name != "" && $email != "" && $pass1 != "" && $pass2 != "") {
+        if($pass1 === $pass2){
         $hashedPass = password_hash($pass1, PASSWORD_DEFAULT); 
+        $query = "INSERT INTO users (name, email, password) VALUES (:name, :email, :pass)";
 
         $statement = $db->prepare($query);
         $statement->bindValue(":name", $name);
         $statement->bindValue(":email", $email);
         $statement->bindValue(":pass", $hashedPass);
         $statement->execute();
+        }
     } else {
         $result = "Registratin Failed!! Please Try Again";
         $error = true;

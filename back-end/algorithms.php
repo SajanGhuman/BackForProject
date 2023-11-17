@@ -8,7 +8,6 @@ header('Content-Type: application/json');
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $json = file_get_contents('php://input');
     $data = json_decode($json, true);
-
     $type = strtolower($data['type']);
     $error = false;
 
@@ -16,6 +15,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($type === '') {
             $query = "SELECT * FROM algorithms";
             $statement = $db->prepare($query);
+            $statement->execute();
+        } else if ($type === "f2l") {
+            $query = "SELECT * FROM algorithms WHERE type = :type";
+            $statement = $db->prepare($query);
+            $statement->bindParam(':type', $type, PDO::PARAM_STR);
             $statement->execute();
         } else if ($type === "oll") {
             $query = "SELECT * FROM algorithms WHERE type = :type";

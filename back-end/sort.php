@@ -10,25 +10,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = json_decode($json, true);
 
     $name = $data['name'];
-    $notation = $data['notation'];
-    $type = $data['type'];
+    $date = $data['date'];
+    $modified = $data['modified'];
 
     $result = "";
     $error = false;
     try {
-        if ($name != "" && $notation != "" && $type != "") {
-            $query = "INSERT INTO algorithms (name, notation, type) VALUES (:name, :notation, :type)";
+        if ($name != '' && $date !== '' && $modified !== '' ) {
+                $query = "SELECT FROM algorithms (name, date, modified) VALUES (:name,:date, :modified)";
 
-            $statement = $db->prepare($query);
-            $statement->bindValue(":name", $name);
-            $statement->bindValue(":notation", $notation);
-            $statement->bindValue(":type", $type);
-            $statement->execute();
+                $statement = $db->prepare($query);
+                $statement->bindValue(":name", $name);
+                $statement->bindValue(":date", $date);
+                $statement->bindValue(":modified", $modified);
+                $statement->bindValue(":access", $access);
+                $statement->execute();
 
-            $result = "Algorithm Added Succesfully";
-        } else {
-            $result = "Failed To Add Algorithm. Please Try Again";
-            $error = true;
+                $result = "User Added Succesfully";
+            }
         }
     } catch (PDOException $e) {
         $error = true;

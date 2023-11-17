@@ -7,6 +7,7 @@ const Logout = () => {
   const handleLogoutClick = () => {
     setTimeout(() => {
       localStorage.setItem("login", "false");
+      localStorage.setItem("access", "0");
       navget("/");
       window.location.reload();
     }, 2000);

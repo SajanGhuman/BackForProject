@@ -6,28 +6,34 @@ header('Access-Control-Allow-Headers: Content-Type');
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    $name = $_GET['name'];
-    $notation = $_GET['notation'];
-    $description = $_GET['description'];
+    if (empty($_GET['algID'])) {
+        $response = json_encode(["error" => true, "message" => "AlgID is empty"]);
+        echo $response;
+        return;
+    }
 
-    $result = "Algorithm Added Succesfully";
-    $error = false;
-    if ($name != "" && $notation != "" && $description != "") {
-        $query = "SELECT name, notation, description FROM basic WHERE name = :name AND notation = :notation AND description = :description";
+    $algID = $_GET['algID'];
+
+    try {
+        $query = "SELECT * FROM algorithms WHERE algID = :algID";
 
         $statement = $db->prepare($query);
-        $statement->bindValue(":name", $name);
-        $statement->bindValue(":notation", $notation);
-        $statement->bindValue(":description", $description);
+        $statement->bindValue(":algID", $algID);
         $statement->execute();
 
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-        $error = false;
-    } else {
-        $result = "Failed To fetch Algorithm. Please Try Again";
-    }
-    $response[] = array("result" => $result, "error" => $error);
-    echo json_encode($response);
-}
 
+        if (empty($result)) {
+            $response = json_encode(["error" => true, "message" => "Algorithm not found"]);
+        } else {
+            $response = json_encode(["result" => $result, "error" => false]);
+        }
+
+        echo $response;
+    } catch (PDOException $e) {
+        // Handle database errors
+        $response = json_encode(["error" => true, "message" => "Database error: " . $e->getMessage()]);
+        echo $response;
+    }
+}
 ?>

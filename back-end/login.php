@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $result = '';
 
-    if ($email != "" and $pass != "") {
+    if ($email !== "" and $pass !== "") {
         $query = "SELECT * FROM users WHERE email=:email";
         $statement = $db->prepare($query);
         $statement->bindParam(':email', $email, PDO::PARAM_STR);
@@ -24,21 +24,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = false;
 
         if ($row) {
-            if (password_verify($pass, $row["password"])) {
+            if (!password_verify($pass, $row["password"])) {
                 $result = "Invalid Password";
                 $error = true;
+                error_log("Entered password: " . $pass);
+                error_log("Stored hashed password: " . $row["password"]);
+                error_log("Password verification result: " . var_export(password_verify($pass, $row["password"]), true));
             } else {
                 $result = "Logged in successfully! Redirecting...";
-                $hashedPass = password_hash($row["password"], PASSWORD_DEFAULT);
                 $error = false;
             }
+            $response[] = array("result" => $result, "error" => $error, "access" => $row["access"]);
         } else {
             $result = "Email does not exist";
             $error = true;
         }
 
     } else {
-        $result = '';
+        $error = true;
     }
     $response[] = array("result" => $result, "error" => $error);
     echo json_encode($response);

@@ -40,7 +40,7 @@ const LOGIN = () => {
         method: "POST",
         headers: {
           Accept: "application/json",
-          "Content-Type": "application/json", 
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       })
@@ -56,9 +56,11 @@ const LOGIN = () => {
             setMsg("Logged in successfully!! Redirecting...");
             localStorage.setItem("login", "true");
             localStorage.setItem("email", formData.email);
+            if (data[0].access === 1) {
+              localStorage.setItem("access", "1");
+            }
             setTimeout(() => {
-              console.log("logging in");
-              navget("/");
+              navget("/dashboard");
             }, 3000);
           }
         })

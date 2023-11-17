@@ -9,6 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $json = file_get_contents('php://input');
     $data = json_decode($json, true);
 
+    $algID = $data['algID'];
     $name = $data['name'];
     $notation = $data['notation'];
     $type = $data['type'];
@@ -16,16 +17,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = "";
     $error = false;
     try {
-        if ($name != "" && $notation != "" && $type != "") {
-            $query = "INSERT INTO algorithms (name, notation, type) VALUES (:name, :notation, :type)";
+        if ($algID !== '') {
+            $query = "UPDATE algorithms SET name = :name, notation = :notation, type = :type WHERE algID = :algID";
 
             $statement = $db->prepare($query);
             $statement->bindValue(":name", $name);
             $statement->bindValue(":notation", $notation);
             $statement->bindValue(":type", $type);
+            $statement->bindValue(":algID", $algID);
             $statement->execute();
 
-            $result = "Algorithm Added Succesfully";
+            $result = "Algorithm Updated Successfully";
         } else {
             $result = "Failed To Add Algorithm. Please Try Again";
             $error = true;
