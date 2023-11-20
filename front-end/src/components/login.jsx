@@ -55,7 +55,7 @@ const LOGIN = () => {
           } else {
             setMsg("Logged in successfully!! Redirecting...");
             localStorage.setItem("login", "true");
-            localStorage.setItem("email", formData.email);
+            localStorage.setItem("userID", data[0].userID);
             if (data[0].access === 1) {
               localStorage.setItem("access", "1");
             }

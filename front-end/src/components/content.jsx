@@ -46,11 +46,11 @@ const Content = (/* props */) => {
       body: JSON.stringify(sort),
     })
       .then((res) => {
+        console.log(res);
         return res.json();
       })
       .then((data) => {
-        setData(data.row);
-        console.log(data.row);
+        console.log(data);
       })
       .catch((err) => {
         console.log("Error:", err);
@@ -100,7 +100,7 @@ const Content = (/* props */) => {
           <div className="sort__div">
             <select
               name="name"
-              id="sort"
+              id="name"
               value={sort.name}
               onChange={handleSort}
             >
@@ -112,7 +112,7 @@ const Content = (/* props */) => {
             <select
               value={sort.date}
               name="date"
-              id="sort"
+              id="date"
               onChange={handleSort}
             >
               <option value="">Sort By Date</option>
@@ -123,7 +123,7 @@ const Content = (/* props */) => {
             <select
               value={sort.modified}
               name="modified"
-              id="sort"
+              id="modified"
               onChange={handleSort}
             >
               <option value="">Sort By Date Modified</option>

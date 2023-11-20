@@ -2,7 +2,7 @@ import "../App.css";
 import { useEffect, useState, useContext, createContext } from "react";
 import { Routes, Route, Link, useNavigate, useParams } from "react-router-dom";
 
-const EDIT = () => {
+const EDIT = () => {  
   const navget = useNavigate();
   const [error, setError] = useState("");
   const [msg, setMsg] = useState("");

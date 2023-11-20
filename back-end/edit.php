@@ -27,11 +27,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $response = json_encode(["error" => true, "message" => "Algorithm not found"]);
         } else {
             $response = json_encode(["result" => $result, "error" => false]);
-        }
+        }   
 
         echo $response;
     } catch (PDOException $e) {
-        // Handle database errors
         $response = json_encode(["error" => true, "message" => "Database error: " . $e->getMessage()]);
         echo $response;
     }

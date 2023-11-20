@@ -1,21 +1,43 @@
 import "../App.css";
 import { Routes, Route, Link } from "react-router-dom";
 import Cube from "./cube";
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import Cursor from "./cursor";
+import Mask from "./mask";
 
 const Home = () => {
+  const [cursorVariant, setCursorVariant] = useState("default");
+
+  const mouseEnter = () => {
+    setCursorVariant("text");
+    console.log(cursorVariant);
+  };
+
+  const mouseLeave = () => {
+    setCursorVariant("default");
+    console.log(cursorVariant);
+  };
+
   return (
-    <div>
-      <div className="main__home__div">
+    <div className="home__container">
+      <div
+        onMouseEnter={mouseEnter}
+        onMouseLeave={mouseLeave}
+        className="main__home__div"
+      >
         <h1 className="intro__title">CUBE SPACE</h1>
-        <h1 className="intro__text">
-          <span className="yellow">WANT TO CUBE?</span>
+        <span className="green">
+          WANT TO CUBE?
           <span className="white"> YOU ARE AT THE RIGHT PLACE.</span>
-        </h1>
-        <p className="intro__text__para">
-          Gain access to all the cubing resources you will ever need.
-          <span className="yellow">FREE OF COST</span>
+        </span>
+        <p className="intro__text__para bold green">
+          GAIN ACCESS TO ALL THE CUBING RESOURCES YOU WILL EVER NEED.
+          <span className="white"> FREE OF COST</span>
         </p>
       </div>
+      {/* <Cursor cursorVariant={cursorVariant} /> */}
+      <Mask cursorVariant={cursorVariant}/>
     </div>
   );
 };

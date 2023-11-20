@@ -4,6 +4,8 @@ import { Routes, Route, Link, useNavigate } from "react-router-dom";
 import ADD from "./add";
 import Content from "./content";
 import EDIT from "./edit";
+import Search from "./search";
+import Comments from "./comments";
 
 const AdminDashboard = () => {
   const [show, setShow] = useState(true);
@@ -23,6 +25,7 @@ const AdminDashboard = () => {
 
   return (
     <div>
+      <Search />
       <div className="add__main__div__1">
         <Link to="/ADD" className="add__div">
           <p className="add__text">Add a Algorithm</p>
@@ -32,13 +35,8 @@ const AdminDashboard = () => {
           <p className="add__text">Add a User</p>
         </Link>
       </div>
-      {show ? (
-        <Content handleShow={handleShow} />
-      ) : (
-        <IDContext.Provider value={id}>
-          <EDIT />
-        </IDContext.Provider>
-      )}
+      {show ? <Content handleShow={handleShow} /> : <EDIT />}
+      <Comments />
     </div>
   );
 };

@@ -1,11 +1,11 @@
 import React, { useEffect, useRef } from "react";
 import "../App.css";
 
-const COLOR_BG = "black";
-const COLOR_CUBE = "yellow";
-const SPEED_X = 0.15;
-const SPEED_Y = 0.15;
-const SPEED_Z = 0.15;
+const COLOR_BG = "#b8bdb5";
+const COLOR_CUBE = "beige";
+const SPEED_X = 0.1;
+const SPEED_Y = 0.1;
+const SPEED_Z = 0.1;
 
 const POINT3D = function (x, y, z) {
   this.x = x;
@@ -18,9 +18,9 @@ const Cube = () => {
   const h = 80;
   const w = 80;
   const cx = w / 2;
-  const cy = h /2;
+  const cy = h / 2;
   const cz = 0;
-  const size = h/5;
+  const size = h / 5;
 
   const vertices = [
     new POINT3D(cx - size, cy - size, cz - size),
@@ -55,7 +55,7 @@ const Cube = () => {
     canvas.width = w;
     ctx.fillStyle = COLOR_BG;
     ctx.strokeStyle = COLOR_CUBE;
-    ctx.lineWidth = w/10;
+    ctx.lineWidth = w / 15;
     ctx.lineCap = "round";
 
     let timeDelta;
