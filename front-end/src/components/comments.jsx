@@ -1,13 +1,14 @@
 import "../App.css";
-import { useEffect, useState, useContext, createContext } from "react";
+import { useEffect, useState } from "react";
 import { Routes, Route, Link, useNavigate } from "react-router-dom";
-
 const Comments = () => {
   const [comments, setComments] = useState({
     userID: localStorage.getItem("userID"),
-    title: "",
+    name: "",
     content: "",
   });
+
+  const [commentsSection, setCommentsSection] = useState([]);
 
   const [msg, setMsg] = useState("");
   const [error, setError] = useState("");
@@ -17,10 +18,15 @@ const Comments = () => {
     console.log(comments);
   };
 
+  const isLoggedIn = localStorage.getItem("login") === "true";
+
   const submitComment = (e) => {
     e.preventDefault();
 
-    if ((comments.title !== "", comments.content !== "")) {
+    if (
+      (!isLoggedIn && comments.name !== "" && comments.content !== "") ||
+      (isLoggedIn && comments.content !== "")
+    ) {
       fetch("http://localhost/react-project/back-end/comments.php", {
         method: "POST",
         headers: {
@@ -34,22 +40,40 @@ const Comments = () => {
           return res.json();
         })
         .then((res) => {
-          console.log(res);
           if (res.error === true) {
+            console.log(res.result);
             setError(res.result);
           } else {
-            setMsg("Adding comment...");
+            window.location.reload();
           }
         })
         .catch((err) => {
-          setError(err);
           console.log("Error:", err);
         });
     } else {
       e.preventDefault();
-      setError("All field are required");
+      setError("All fields are required");
     }
   };
+
+  useEffect(() => {
+    fetch("http://localhost/react-project/back-end/getComments.php")
+      .then((res) => {
+        console.log(res);
+        return res.json();
+      })
+      .then((res) => {
+        if (res.error === true) {
+          console.log("there is an error");
+        } else {
+          setCommentsSection(res.result);
+        }
+      })
+      .catch((err) => {
+        setError(err);
+        console.log("Error:", err);
+      });
+  }, []);
 
   return (
     <div>
@@ -57,41 +81,64 @@ const Comments = () => {
         {msg !== "" ? (
           <span className="comments__msg">{msg}</span>
         ) : (
-          <span className="commetns__error">{error}</span>
+          <span className="comments__error">{error}</span>
         )}
       </div>
-      <h1>Comments: </h1>
-      <div className="comments__title__div">
-        <label htmlFor="comments__title">
-          <h3>Add Title: </h3>
-        </label>
-        <textarea
-          className="comments__title"
-          name="title"
-          id="comments__title"
-          cols="150"
-          rows="5"
-          onChange={handleText}
-        ></textarea>
-      </div>
-
       <div className="comments__content__div">
-        <label htmlFor="comments__content">
-          <h3>Add Comment: </h3>
-        </label>
-        <textarea
-          className="comments__content"
-          name="content"
-          id="comments__content"
-          cols="150"
-          rows="10"
-          onChange={handleText}
-        ></textarea>
+        <h1 className="leave__comment">Leave a Comment</h1>
+        {isLoggedIn ? (
+          <textarea
+            className="comments__content"
+            name="content"
+            id="comments__content"
+            cols="150"
+            rows="10"
+            onChange={handleText}
+          ></textarea>
+        ) : (
+          <>
+            <div className="comments__title__div">
+              <label htmlFor="comments__title">
+                <h3>Your Name </h3>
+              </label>
+              <textarea
+                className="comments__title"
+                name="name"
+                id="comments__title"
+                cols="30"
+                rows="3"
+                onChange={handleText}
+              ></textarea>
+            </div>
+            <textarea
+              className="comments__content"
+              name="content"
+              id="comments__content"
+              cols="150"
+              rows="10"
+              onChange={handleText}
+            ></textarea>
+          </>
+        )}
+        <button onClick={submitComment} className="comment__button">
+          Comment
+        </button>
       </div>
-      <button onClick={submitComment} className="comment__button">
-        Comment
-      </button>
-      <div className="filler__div" ></div>
+      <div className="comment__section">
+        {commentsSection.map((comment, index) => (
+          <div className="user__comment__div" key={index}>
+            <p>{comment.commentName ? comment.commentName : comment.name}</p>
+            <p>{comment.content}</p>
+            <Link to={`/editComment/${comment.id}`}>
+              <button>Edit</button>
+            </Link>
+            <Link to={`/deleteComment/${comment.id}`}>
+              <button>Delete</button>
+            </Link>
+          </div>
+        ))}
+      </div>
+      <div className="filler__div"></div>
     </div>
   );
 };

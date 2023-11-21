@@ -25,18 +25,23 @@ const AdminDashboard = () => {
 
   return (
     <div>
-      <Search />
       <div className="add__main__div__1">
         <Link to="/ADD" className="add__div">
-          <p className="add__text">Add a Algorithm</p>
+          <button className="add__text__1">Add a Algorithm</button>
         </Link>
         <br />
         <Link to="/ADDUSER" className="add__div">
-          <p className="add__text">Add a User</p>
+          <p className="add__text__2">Add a User</p>
+        </Link>
+        <Link to="/Users" className="add__div">
+          <p className="add__text__3">Manage Users</p>
+        </Link>
+        <Link to="/addCategory" className="add__div">
+          <p className="add__text__3">Add Category</p>
         </Link>
       </div>
       {show ? <Content handleShow={handleShow} /> : <EDIT />}
-      <Comments />
+      {/* <Comments /> */}
     </div>
   );
 };

@@ -23,12 +23,12 @@ const Mask = ({ cursorVariant }) => {
 
   const variants = {
     default: {
-      webkitMaskPosition: `${mousePosi.x - 25}px ${mousePosi.y - 25}px`,
+      webkitMaskPosition: `${mousePosi.x - 20}px ${mousePosi.y - 20}px`,
       webkitMaskSize: `${size}px`,
     },
     text: {
-      webkitMaskPosition: `${mousePosi.x - 75}px ${mousePosi.y - 75}px`,
-      webkitMaskSize: `${size * 5}px`,
+      webkitMaskPosition: `${mousePosi.x - 120}px ${mousePosi.y - 120}px`,
+      webkitMaskSize: `${size * 6}px`,
     },
   };
   return (

@@ -10,18 +10,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = json_decode($json, true);
 
     $userID = $data['userID'];
-    $title = $data['title'];
+    $name = $data['name'];
     $content = $data['content'];
 
-    $result = "";
+    $result = "df";
     $error = false;
     try {
-        if ($title != "" && $content != "") {
-            $query = "INSERT INTO comments (userID,title, content) VALUES (:userID,:title, :content)";
+        if ($content != "") {
+            $query = "INSERT INTO comments (userID,commentName,content) VALUES (:userID,:commentName, :content)";
+
 
             $statement = $db->prepare($query);
             $statement->bindValue(":userID", $userID);
-            $statement->bindValue(":title", $title);
+            $statement->bindValue(":commentName", $name);
             $statement->bindValue(":content", $content);
             $statement->execute();
 

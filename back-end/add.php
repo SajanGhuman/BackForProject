@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $name = $data['name'];
     $notation = $data['notation'];
-    $type = $data['type'];
+    $type = strtolower($data['type']);
 
     $result = "";
     $error = false;

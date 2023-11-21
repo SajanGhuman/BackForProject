@@ -8,37 +8,50 @@ header('Content-Type: application/json');
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $json = file_get_contents('php://input');
     $data = json_decode($json, true);
+    $selected = strtolower($data['selected']);
+    $search = '%' . $data['search'] . '%';
+    $searchBy = $data['searchBy'];
     $type = strtolower($data['type']);
     $error = false;
 
     try {
-        if ($type === '') {
-            $query = "SELECT * FROM algorithms";
-            $statement = $db->prepare($query);
-            $statement->execute();
-        } else if ($type === "f2l") {
-            $query = "SELECT * FROM algorithms WHERE type = :type";
-            $statement = $db->prepare($query);
-            $statement->bindParam(':type', $type, PDO::PARAM_STR);
-            $statement->execute();
-        } else if ($type === "oll") {
-            $query = "SELECT * FROM algorithms WHERE type = :type";
-            $statement = $db->prepare($query);
-            $statement->bindParam(':type', $type, PDO::PARAM_STR);
-            $statement->execute();
-        } else if ($type === "pll") {
-            $query = "SELECT * FROM algorithms WHERE type = :type";
-            $statement = $db->prepare($query);
-            $statement->bindParam(':type', $type, PDO::PARAM_STR);
-            $statement->execute();
+        $query = "SELECT * FROM algorithms WHERE 1";
+
+        if (!empty($search)) {
+            $query .= " AND name LIKE :search";
         }
 
-        $row = $statement->fetchAll(PDO::FETCH_ASSOC);
+        if (!empty($type)) {
+            $query .= " AND type = :type";
+        }
 
-        if (empty($row)) {
+        // Add sorting condition
+        if ($selected && $selected === 'name') {
+            $query .= " ORDER BY name ASC";
+        } elseif ($selected && $selected === 'date') {
+            $query .= " ORDER BY date_created DESC";
+        } elseif ($selected && $selected === 'modified') {
+            $query .= " ORDER BY date_modified DESC";
+        }
+
+        $statement = $db->prepare($query);
+
+        if (!empty($search)) {
+            $statement->bindParam(':search', $search, PDO::PARAM_STR);
+        }
+
+        if (!empty($type)) {
+            $statement->bindParam(':type', $type, PDO::PARAM_STR);
+        }
+
+        $statement->execute();
+
+        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+        if (empty($result)) {
             $response = json_encode(['error' => 'No data found']);
         } else {
-            $response = json_encode(['row' => $row, 'error' => $error]);
+            $response = json_encode(['result' => $result, 'error' => $error]);
         }
     } catch (PDOException $e) {
         $error = true;
@@ -47,5 +60,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     echo $response;
 }
-
 ?>

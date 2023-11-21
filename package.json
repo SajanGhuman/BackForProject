@@ -5,6 +5,7 @@
     "tailwindcss": "^3.3.5"
   },
   "dependencies": {
-    "framer-motion": "^10.16.5"
+    "framer-motion": "^10.16.5",
+    "react-paginate": "^8.2.0"
   }
 }

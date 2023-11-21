@@ -56,6 +56,8 @@ const LOGIN = () => {
             setMsg("Logged in successfully!! Redirecting...");
             localStorage.setItem("login", "true");
             localStorage.setItem("userID", data[0].userID);
+            localStorage.setItem("name", data[0].name);
+            console.log(localStorage.getItem("name"));
             if (data[0].access === 1) {
               localStorage.setItem("access", "1");
             }
@@ -74,11 +76,13 @@ const LOGIN = () => {
   };
 
   return (
-    <div className="login__div">
+    <di v className="login__div">
       {error !== "" ? (
-        <div className="error__div">{error}</div>
+        <div className="error__div__login">
+          <p>{error}</p>
+        </div>
       ) : (
-        <div className="msg__div">{msg}</div>
+        <div className="msg__div__login">{msg}</div>
       )}
       <form>
         <ul className="login__ul">
@@ -113,7 +117,7 @@ const LOGIN = () => {
           </button>
         </ul>
       </form>
-    </div>
+    </di>
   );
 };
 

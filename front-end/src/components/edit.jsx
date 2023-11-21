@@ -2,7 +2,7 @@ import "../App.css";
 import { useEffect, useState, useContext, createContext } from "react";
 import { Routes, Route, Link, useNavigate, useParams } from "react-router-dom";
 
-const EDIT = () => {  
+const EDIT = () => {
   const navget = useNavigate();
   const [error, setError] = useState("");
   const [msg, setMsg] = useState("");
@@ -57,7 +57,8 @@ const EDIT = () => {
           if (res.error === true) {
             setError("Error occured");
           } else {
-            setFormData({...formData,
+            setFormData({
+              ...formData,
               name: res.result[0].name || "",
               notation: res.result[0].notation || "",
               type: res.result[0].type || "",
@@ -108,50 +109,52 @@ const EDIT = () => {
   return (
     <div className="edit__div">
       {msg !== "" ? (
-        <span className="success">{msg}</span>
+        <span className="edit__msg__div">{msg}</span>
       ) : (
-        <span className="error">{error}</span>
+        <span className="edit__error__div">{error}</span>
       )}
-      <form onSubmit={(e) => handleSubmit(e)}>
-        <ul className="edit__ul">
-          <li>
-            <label htmlFor="name">Name: </label>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              placeholder="Enter alg Name"
-              onChange={(e) => handleChange(e, "name")}
-            />
-          </li>
-          <li>
-            <label htmlFor="notation">Notation: </label>
-            <input
-              type="text"
-              name="notation"
-              value={formData.notation}
-              placeholder="Enter Alg Notation"
-              onChange={(e) => handleChange(e, "notation")}
-            />
-          </li>
-          <li>
-            <label htmlFor="type">Type: </label>
-            <select
-              value={formData.type}
-              name="type"
-              id="type"
-              onChange={(e) => handleChange(e, "type")}
-            >
-              <option value="f2l">F2l</option>
-              <option value="oll">OLL</option>
-              <option value="pll">PLL</option>
-            </select>
-          </li>
-          <button type="submit" className="add__submit">
-            Update Algorithm
-          </button>
-        </ul>
-      </form>
+      <div>
+        <form onSubmit={(e) => handleSubmit(e)}>
+          <ul className="edit__ul">
+            <li>
+              <label htmlFor="name">Name: </label>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                placeholder="Enter alg Name"
+                onChange={(e) => handleChange(e, "name")}
+              />
+            </li>
+            <li>
+              <label htmlFor="notation">Notation: </label>
+              <input
+                type="text"
+                name="notation"
+                value={formData.notation}
+                placeholder="Enter Alg Notation"
+                onChange={(e) => handleChange(e, "notation")}
+              />
+            </li>
+            <li>
+              <label htmlFor="type">Type: </label>
+              <select
+                value={formData.type}
+                name="type"
+                id="type"
+                onChange={(e) => handleChange(e, "type")}
+              >
+                <option value="f2l">F2l</option>
+                <option value="oll">OLL</option>
+                <option value="pll">PLL</option>
+              </select>
+            </li>
+            <button type="submit" className="add__submit">
+              Update Algorithm
+            </button>
+          </ul>
+        </form>
+      </div>
     </div>
   );
 };

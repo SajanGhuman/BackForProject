@@ -1,43 +1,69 @@
 import { useEffect, useState, useContext, createContext } from "react";
 import { Routes, Route, Link, useNavigate } from "react-router-dom";
+import Comments from "./comments";
+import ReactPaginate from "react-paginate";
+import Pagination from "./pagination";
 
-const Content = (/* props */) => {
+const Content = () => {
+  /*--------------------Pagination Logic--------------------*/
+  const [sortedData, setSortedData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [postPerPage, setPostPerPage] = useState(15);
+  const [paginatedData, setPaginatedData] = useState([]);
+
+  useEffect(() => {
+    const lastPageIndex = currentPage * postPerPage;
+    const firstPageIndex = lastPageIndex - postPerPage;
+    setPaginatedData(sortedData.slice(firstPageIndex, lastPageIndex));
+  }, [sortedData, currentPage, postPerPage]);
+
+  const [searchValue, setSearchValue] = useState("");
   const navget = useNavigate();
-  const [data, setData] = useState([]);
-  const [type, setType] = useState({
-    type: "",
-  });
   const [algID, setID] = useState({
     algID: null,
   });
   const [error, setError] = useState("");
   const [msg, setMsg] = useState("");
   const [sort, setSort] = useState({
-    name: "",
-    date: "",
-    modified: "",
+    selected: "name",
+    type: "",
+    search: "",
+    searchBy: "name",
   });
+  const [searchData, setSearchData] = useState([]);
+  const [categories, setCategories] = useState([]);
+
+  const handleSearch = (e) => {
+    setSort({ ...sort, search: e.target.value });
+    setSearchValue(e.target.value);
+  };
+
+  const handleChange = (e) => {
+    setSort({ ...sort, searchBy: e.target.value });
+    console.log(sort);
+  };
 
   const handleOptionsChange = (e) => {
     console.log(e.target.value);
-    setType({ ...type, type: e.target.value });
+    setSort({ ...sort, type: e.target.value });
+    console.log(sort);
   };
-
-  // useEffect(() => {
-  //   props.handleShow(algID);
-  // }, [algID]);
 
   const handleClick = (kid) => {
     setID({ ...algID, algID: kid });
   };
 
   const handleSort = (e) => {
-    setSort({ ...sort, [e.target.name]: e.target.value });
+    setSort({ ...sort, selected: e.target.value });
     console.log(sort);
   };
 
+  const handleClear = () => {
+    setSort({ ...sort, selected: "", type: "", search: "", searchBy: "" });
+    setSearchValue("");
+  };
   useEffect(() => {
-    fetch("http://localhost/react-project/back-end/sort.php", {
+    fetch("http://localhost/react-project/back-end/algorithms.php", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -50,149 +76,183 @@ const Content = (/* props */) => {
         return res.json();
       })
       .then((data) => {
-        console.log(data);
+        if (data.error) {
+          console.log("Error:", data.error);
+          setSortedData([]);
+        } else {
+          setSortedData(data.result || []);
+        }
       })
       .catch((err) => {
-        console.log("Error:", err);
+        console.log("Catch Error:", err);
+        setSortedData([]);
       });
   }, [sort]);
 
   useEffect(() => {
-    fetch("http://localhost/react-project/back-end/algorithms.php", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(type),
-    })
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        if (data.error === true) {
-          setError("Fetch Error - Please Try Again");
-        } else {
-          setData(data.row);
-          console.log(data.row);
-        }
-      })
-      .catch((err) => {
-        console.log("Error:", err);
-      });
-  }, [type]);
+    {
+      fetch(`http://localhost/react-project/back-end/getCategories.php`)
+        .then((res) => {
+          console.log(res);
+          return res.json();
+        })
+        .then((res) => {
+          console.log(res);
+          if (res.error === true) {
+            setError("Error occured");
+          } else {
+            console.log(res.result);
+            setCategories(res.result || []);
+          }
+        })
+        .catch((err) => {
+          console.log("Error:", err);
+        });
+    }
+  }, []);
 
   return (
     <div>
+      <div className="msg__div">
+        {msg !== "" ? (
+          <span className="comments__msg">{msg}</span>
+        ) : (
+          <span className="comments__error">{error}</span>
+        )}
+      </div>
+      <div>
+        <select
+          value={sort.type}
+          onChange={handleOptionsChange}
+          className="type__options"
+        >
+          <option value="">All</option>
+          {categories.map((category) => (
+            <option value={category.categoryName}>
+              {category.categoryName}
+            </option>
+          ))}
+        </select>
+      </div>
       {localStorage.getItem("login") === "true" && (
         <div>
-          <select
-            value={type.type}
-            onChange={handleOptionsChange}
-            className="type__options"
-          >
-            <option value="">All</option>
-            <option value="f2l">F2L</option>
-            <option value="oll">OLL</option>
-            <option value="pll">PLL</option>
-          </select>
-
           <div className="sort__div">
             <select
-              name="name"
-              id="name"
-              value={sort.name}
+              name="sort"
+              id="sort"
+              value={sort.selected}
               onChange={handleSort}
             >
-              <option value="">Sort By Name</option>
-              <option value="a-z">A-Z(By Name)</option>
-              <option value="z-a">Z-A(By Name)</option>
+              <option name="name" value="name">
+                Name(A-Z)
+              </option>
+              <option value="date">Date Created(newest first)</option>
+              <option name="modified" value="modified">
+                Date Modified(newest first)
+              </option>
             </select>
 
-            <select
-              value={sort.date}
-              name="date"
-              id="date"
-              onChange={handleSort}
-            >
-              <option value="">Sort By Date</option>
-              <option value="newest">Newest(By Date)</option>
-              <option value="oldest">Oldest(By Date)</option>
-            </select>
-
-            <select
-              value={sort.modified}
-              name="modified"
-              id="modified"
-              onChange={handleSort}
-            >
-              <option value="">Sort By Date Modified</option>
-              <option value="newest">Newest</option>
-              <option value="oldest">Oldest</option>
-            </select>
-            <button className="sort__remove__button">Clear Filters</button>
+            <button className="sort__remove__button" onClick={handleClear}>
+              Clear
+            </button>
           </div>
         </div>
       )}
       <div className="content__div">
         {localStorage.getItem("login") === "true" ? (
           <div>
-            <table
-              className={
-                type.type === "oll"
-                  ? "oll__table"
-                  : type.type === "pll"
-                  ? "pll__table"
-                  : type.type === "f2l"
-                  ? "f2l__table"
-                  : "alg__table"
-              }
-            >
-              <thead>
-                <tr>
-                  <th>AlgID</th>
-                  <th>Name</th>
-                  <th>Notation</th>
-                  <th>Type</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.length > 0 &&
-                  data.map((item) => (
-                    <tr key={item.algID}>
-                      <td>{item.algID}</td>
-                      <td>{item.name}</td>
-                      <td>{item.notation}</td>
-                      <td>{item.type}</td>
-                      <td>
-                        <Link to={`/edit/${item.algID}`}>
-                          <button
-                            onClick={() => {
-                              handleClick(item.algID);
-                            }}
-                          >
-                            Edit
-                          </button>
-                        </Link>
-                      </td>
-                      <td>
-                        <Link to={`/delete/${item.algID}`}>
-                          <button>Delete</button>
-                        </Link>
-                      </td>
+            <div className="search__container">
+              <div className="search__div">
+                <input
+                  type="text"
+                  onChange={handleSearch}
+                  value={searchValue}
+                />
+              </div>
+              <div className="searchBy__div">
+                <label htmlFor="access">Search By </label>
+                <select
+                  value={sort.searchBy}
+                  onChange={handleChange}
+                  name="searchBy"
+                  id="searchBy"
+                >
+                  <option value="name">Name</option>
+                  <option value="notation">Notation</option>
+                </select>
+              </div>
+            </div>
+            {sortedData.length > 0 ? (
+              <div>
+                <table
+                  className={
+                    sort.type === "oll"
+                      ? "oll__table"
+                      : sort.type === "pll"
+                      ? "pll__table"
+                      : sort.type === "f2l"
+                      ? "f2l__table"
+                      : "alg__table"
+                  }
+                >
+                  <thead>
+                    <tr>
+                      <th>AlgID</th>
+                      <th>Name</th>
+                      <th>Notation</th>
+                      <th>Type</th>
                     </tr>
-                  ))}
-              </tbody>
-            </table>
+                  </thead>
+                  <tbody>
+                    {sortedData.length > 0 &&
+                      paginatedData.map((item) => (
+                        <tr key={item.algID}>
+                          <td>{item.algID}</td>
+                          <td>{item.name}</td>
+                          <td>{item.notation}</td>
+                          <td>{item.type}</td>
+                          <td>
+                            <Link to={`/edit/${item.algID}`}>
+                              <button
+                                className="content__edit__button"
+                                onClick={() => {
+                                  handleClick(item.algID);
+                                }}
+                              >
+                                Edit
+                              </button>
+                            </Link>
+                          </td>
+                          <td>
+                            <Link to={`/delete/${item.algID}`}>
+                              <button className="content__delete__button">
+                                Delete
+                              </button>
+                            </Link>
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+                <Pagination
+                  totalPost={sortedData.length}
+                  postPerPage={postPerPage}
+                  setCurrentPage={setCurrentPage}
+                  currentPage={currentPage}
+                />
+              </div>
+            ) : (
+              <p>No Result Found</p>
+            )}
           </div>
         ) : (
           <table
             className={
-              type.type === "oll"
+              sort.type === "oll"
                 ? "oll__table"
-                : type.type === "pll"
+                : sort.type === "pll"
                 ? "pll__table"
-                : type.type === "f2l"
+                : sort.type === "f2l"
                 ? "f2l__table"
                 : "alg__table"
             }
@@ -206,8 +266,8 @@ const Content = (/* props */) => {
               </tr>
             </thead>
             <tbody>
-              {data.length > 0 &&
-                data.map((item) => (
+              {sortedData.length > 0 &&
+                sortedData.map((item) => (
                   <tr key={item.algID}>
                     <td>{item.algID}</td>
                     <td>{item.name}</td>
@@ -219,6 +279,7 @@ const Content = (/* props */) => {
           </table>
         )}
       </div>
+      <Comments />
     </div>
   );
 };

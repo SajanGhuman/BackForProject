@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $result = "Logged in successfully! Redirecting...";
                 $error = false;
             }
-            $response[] = array("result" => $result, "error" => $error, "access" => $row["access"], "userID" => $row["userID"]);
+            $response[] = array("result" => $result, "error" => $error, "access" => $row["access"], "userID" => $row["userID"], "name" => $row["name"]);
         } else {
             $result = "Email does not exist";
             $error = true;

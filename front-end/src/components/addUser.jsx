@@ -102,7 +102,7 @@ const ADDUSER = () => {
   };
 
   return (
-    <div className="add__div__main">
+    <div className="user__div__main">
       <div className="msg__div">
         {msg !== "" ? (
           <span className="success">{msg}</span>

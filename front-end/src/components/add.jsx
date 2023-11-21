@@ -6,6 +6,7 @@ const ADD = () => {
   const navget = useNavigate();
   const [error, setError] = useState("");
   const [msg, setMsg] = useState("");
+  const [categories, setCategories] = useState([]);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -41,6 +42,28 @@ const ADD = () => {
         break;
     }
   };
+
+  useEffect(() => {
+    {
+      fetch(`http://localhost/react-project/back-end/getCategories.php`)
+        .then((res) => {
+          console.log(res);
+          return res.json();
+        })
+        .then((res) => {
+          console.log(res);
+          if (res.error === true) {
+            setError("Error occured");
+          } else {
+            console.log(res.result);
+            setCategories(res.result || []);
+          }
+        })
+        .catch((err) => {
+          console.log("Error:", err);
+        });
+    }
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -122,9 +145,11 @@ const ADD = () => {
               onChange={(e) => handleChange(e, "type")}
             >
               <option value="">Choose category</option>
-              <option value="f2l">F2l</option>
-              <option value="oll">OLL</option>
-              <option value="pll">PLL</option>
+              {categories.map((category) => (
+                <option value={category.categoryName}>
+                  {category.categoryName}
+                </option>
+              ))}
             </select>
           </li>
           <button type="submit" className="add__submit">

@@ -53,7 +53,7 @@ const REGISTER = () => {
     }
   };
 
-  const handleSubmit = e => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     if (
       formData.email !== "" &&
@@ -96,14 +96,14 @@ const REGISTER = () => {
     }
   };
   return (
-    <div className="login__div">
+    <div className="register__div">
       {msg !== "" ? (
-        <span className="success">{msg}</span>
+        <span className="msg__div__register">{msg}</span>
       ) : (
-        <span className="error">{error}</span>
+        <span className="error__div__register">{error}</span>
       )}
       <form onSubmit={(e) => handleSubmit(e)}>
-        <ul className="login__ul">
+        <ul className="register__ul">
           <li>
             <label htmlFor="name">Name:</label>
             <input
@@ -132,7 +132,7 @@ const REGISTER = () => {
               name="pass1"
               id="pass1"
               value={formData.pass1}
-              placeholder="Enter Your Password"
+              placeholder="Enter Password"
               onChange={(e) => handleChange(e, "pass1")}
             />
           </li>
@@ -143,11 +143,11 @@ const REGISTER = () => {
               name="pass2"
               id="pass2"
               value={formData.pass2}
-              placeholder="Enter Your Password Again!"
+              placeholder="Enter Password Again"
               onChange={(e) => handleChange(e, "pass2")}
             />
           </li>
-          <button type="submit" className="login__submit">
+          <button type="submit" className="register__submit">
             REGISTER
           </button>
         </ul>
