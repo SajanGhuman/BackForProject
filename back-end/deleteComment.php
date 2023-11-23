@@ -10,12 +10,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = json_decode($json, true);
 
     try {
-        if ($data['id'] === '')
-            return;
-        else {
+        $id = filter_var($data['id'], FILTER_VALIDATE_INT);
+
+        if ($id !== false && $id !== null) {
             $query = "DELETE FROM comments WHERE id = :id";
             $statement = $db->prepare($query);
-            $statement->bindParam(':id', $data['id']);
+            $statement->bindParam(':id', $id, PDO::PARAM_INT);
             $statement->execute();
             $rowCount = $statement->rowCount();
 
@@ -24,6 +24,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 $response = json_encode(['error' => 'No rows deleted. Check if user exists.']);
             }
+        } else {
+            $response = json_encode(['error' => 'Invalid or missing id']);
         }
     } catch (PDOException $e) {
         $error = true;
@@ -31,5 +33,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 echo $response;
-
 ?>

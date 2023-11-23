@@ -106,9 +106,9 @@ const EditComment = () => {
     <div className="user__div__main">
       <div className="msg__div">
         {msg !== "" ? (
-          <span className="success">{msg}</span>
+          <span className="edit__comment__msg">{msg}</span>
         ) : (
-          <span className="error">{error}</span>
+          <span className="edit__comment__error">{error}</span>
         )}
       </div>
       <form onSubmit={(e) => handleSubmit(e)}>
@@ -130,6 +130,7 @@ const EditComment = () => {
           <li>
             <label htmlFor="content">Comment:</label>
             <input
+            className="comment__content"
               type="text"
               name="content"
               id="content"

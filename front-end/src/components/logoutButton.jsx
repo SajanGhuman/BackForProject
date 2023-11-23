@@ -9,6 +9,7 @@ const Logout = () => {
       localStorage.setItem("login", "false");
       localStorage.setItem("access", "0");
       localStorage.setItem("name", "");
+      localStorage.setItem("email", "");
       navget("/");
       window.location.reload();
     }, 2000);

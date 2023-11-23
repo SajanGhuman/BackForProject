@@ -18,14 +18,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $query = "SELECT * FROM algorithms WHERE 1";
 
         if (!empty($search)) {
-            $query .= " AND name LIKE :search";
+            if ($searchBy === 'name') {
+                $query .= " AND name LIKE  UPPER(:search)";
+            } else if ($searchBy === 'notation') {
+                $query .= " AND notation LIKE  UPPER(:search)";
+            }
         }
 
         if (!empty($type)) {
             $query .= " AND type = :type";
         }
-
-        // Add sorting condition
         if ($selected && $selected === 'name') {
             $query .= " ORDER BY name ASC";
         } elseif ($selected && $selected === 'date') {

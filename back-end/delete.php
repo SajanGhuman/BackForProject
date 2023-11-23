@@ -10,12 +10,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = json_decode($json, true);
 
     try {
-        if ($data['algID'] === '')
-            return;
-        else {
+        $algID = filter_var($data['algID'], FILTER_VALIDATE_INT);
+
+        if ($algID !== false && $algID !== null) {
             $query = "DELETE FROM algorithms WHERE algID = :algID";
             $statement = $db->prepare($query);
-            $statement->bindParam(':algID', $data['algID']);
+            $statement->bindParam(':algID', $algID, PDO::PARAM_INT);
             $statement->execute();
             $rowCount = $statement->rowCount();
 
@@ -24,12 +24,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 $response = json_encode(['error' => 'No rows deleted. Check if algID exists.']);
             }
+        } else {
+            $response = json_encode(['error' => 'Invalid or missing algID']);
         }
     } catch (PDOException $e) {
         $error = true;
         $response = json_encode(['error' => 'Database Access: ' . $e->getMessage()]);
     }
 }
-echo $response;
 
+echo $response;
 ?>

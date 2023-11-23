@@ -10,12 +10,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = json_decode($json, true);
 
     try {
-        if ($data['userID'] === '')
-            return;
-        else {
+        $userID = filter_var($data['userID'], FILTER_VALIDATE_INT);
+
+        if ($userID !== false && $userID !== null) {
             $query = "DELETE FROM users WHERE userID = :userID";
             $statement = $db->prepare($query);
-            $statement->bindParam(':userID', $data['userID']);
+            $statement->bindParam(':userID', $userID, PDO::PARAM_INT);
             $statement->execute();
             $rowCount = $statement->rowCount();
 
@@ -24,6 +24,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 $response = json_encode(['error' => 'No rows deleted. Check if user exists.']);
             }
+        } else {
+            $response = json_encode(['error' => 'Invalid or missing userID']);
         }
     } catch (PDOException $e) {
         $error = true;
@@ -31,5 +33,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 echo $response;
-
 ?>

@@ -51,7 +51,7 @@ const AddCategory = () => {
         .then((res) => {
           console.log(res);
           if (res.error === true) {
-            console.log(res.error);
+            setError(res.result);
           } else {
             setMsg("Category Added successfully!! Redirecting...");
             setTimeout(() => {
@@ -69,12 +69,12 @@ const AddCategory = () => {
   };
 
   return (
-    <div className="user__div__main">
+    <div className="add__category__div">
       <div className="msg__div">
         {msg !== "" ? (
-          <span className="success">{msg}</span>
+          <span className="add__category__msg">{msg}</span>
         ) : (
-          <span className="error">{error}</span>
+          <span className="add__category__error">{error}</span>
         )}
       </div>
       <form onSubmit={(e) => handleSubmit(e)}>
@@ -100,7 +100,7 @@ const AddCategory = () => {
             />
           </li>
           <button type="submit" className="add__submit" disabled={msg !== ""}>
-            Add User
+            Add Category
           </button>
         </ul>
       </form>

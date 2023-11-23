@@ -28,8 +28,13 @@ const UserDashboard = () => {
         <Link to="/ADD" className="add__div">
           <button className="add__text__1">Add a Algorithm</button>
         </Link>
-        {show ? <Content handleShow={handleShow} /> : <EDIT />}
+        <br />
+        <Link to="/addCategory" className="add__div">
+          <p className="add__text__3">Add Category</p>
+        </Link>
       </div>
+      {show ? <Content handleShow={handleShow} /> : <EDIT />}
+      {/* <Comments /> */}
     </div>
   );
 };

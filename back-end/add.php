@@ -9,9 +9,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $json = file_get_contents('php://input');
     $data = json_decode($json, true);
 
-    $name = $data['name'];
-    $notation = $data['notation'];
-    $type = strtolower($data['type']);
+    $name = filter_var($data['name'], FILTER_SANITIZE_STRING);
+    $notation = filter_var($data['notation'], FILTER_SANITIZE_STRING);
+    $type = strtolower(filter_var($data['type'], FILTER_SANITIZE_STRING));
 
     $result = "";
     $error = false;
@@ -25,15 +25,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $statement->bindValue(":type", $type);
             $statement->execute();
 
-            $result = "Algorithm Added Succesfully";
+            $result = "Algorithm Added Successfully";
         } else {
             $result = "Failed To Add Algorithm. Please Try Again";
             $error = true;
         }
     } catch (PDOException $e) {
         $error = true;
-        $response = json_encode(['error' => 'Database Access: ' . $e->getMessage()]);
+        $result = "Database Access: " . $e->getMessage();
     }
+
     $response = json_encode(["result" => $result, "error" => $error]);
     echo $response;
 }

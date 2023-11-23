@@ -47,7 +47,7 @@ const Search = () => {
   return (
     <div className="search__container">
       <div className="search__div">
-        <input type="text" onChange={handleSearch} />
+        <input type="text" onChange={handleSearch} placeholder="Search" />
       </div>
       <div className="searchBy__div">
         <label htmlFor="access">Search By:</label>

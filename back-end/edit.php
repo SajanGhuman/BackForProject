@@ -6,32 +6,31 @@ header('Access-Control-Allow-Headers: Content-Type');
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    if (empty($_GET['algID'])) {
-        $response = json_encode(["error" => true, "message" => "AlgID is empty"]);
-        echo $response;
-        return;
-    }
+    $algID = filter_var($_GET['algID'], FILTER_VALIDATE_INT);
 
-    $algID = $_GET['algID'];
+    if ($algID !== false && $algID !== null) {
+        try {
+            $query = "SELECT * FROM algorithms WHERE algID = :algID";
 
-    try {
-        $query = "SELECT * FROM algorithms WHERE algID = :algID";
+            $statement = $db->prepare($query);
+            $statement->bindValue(":algID", $algID, PDO::PARAM_INT);
+            $statement->execute();
 
-        $statement = $db->prepare($query);
-        $statement->bindValue(":algID", $algID);
-        $statement->execute();
+            $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+            if (empty($result)) {
+                $response = json_encode(["error" => true, "message" => "Algorithm not found"]);
+            } else {
+                $response = json_encode(["result" => $result, "error" => false]);
+            }
 
-        if (empty($result)) {
-            $response = json_encode(["error" => true, "message" => "Algorithm not found"]);
-        } else {
-            $response = json_encode(["result" => $result, "error" => false]);
-        }   
-
-        echo $response;
-    } catch (PDOException $e) {
-        $response = json_encode(["error" => true, "message" => "Database error: " . $e->getMessage()]);
+            echo $response;
+        } catch (PDOException $e) {
+            $response = json_encode(["error" => true, "message" => "Database error: " . $e->getMessage()]);
+            echo $response;
+        }
+    } else {
+        $response = json_encode(["error" => true, "message" => "Invalid or missing algID"]);
         echo $response;
     }
 }

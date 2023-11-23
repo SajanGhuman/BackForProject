@@ -9,29 +9,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $json = file_get_contents('php://input');
     $data = json_decode($json, true);
 
-    $id = $data['id'];
-    $name = strtolower($data['categoryName']);
+    $id = filter_var($data['id'], FILTER_VALIDATE_INT);
+    $name = filter_var($data['categoryName'], FILTER_SANITIZE_STRING);
 
     $result = "";
     $error = false;
     try {
-        if ($id !== "" && $name !== "") {
-            $query = "INSERT INTO categories (categoryId, categoryName) VALUES (:id,:name)";
+        if ($id !== false && $id !== null && $name !== "") {
+            $query = "INSERT INTO categories (categoryId, categoryName) VALUES (:id, :name)";
 
             $statement = $db->prepare($query);
-            $statement->bindValue(":id", $id);
-            $statement->bindValue(":name", $name);
+            $statement->bindValue(":id", $id, PDO::PARAM_INT);
+            $statement->bindValue(":name", $name, PDO::PARAM_STR);
             $statement->execute();
 
-            $result = "Category Added Succesfully";
+            $result = "Category Added Successfully";
         } else {
-            $result = "Failed To Add Category. Please Try Again";
+            $result = "Failed To Add Category. Invalid or missing data.";
             $error = true;
         }
     } catch (PDOException $e) {
         $error = true;
-        $response = json_encode(['error' => 'Database Access: ' . $e->getMessage()]);
+        $result = "Database Access: " . $e->getMessage();
     }
+
     $response = json_encode(["result" => $result, "error" => $error]);
     echo $response;
 }

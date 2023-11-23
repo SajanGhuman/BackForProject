@@ -9,42 +9,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $json = file_get_contents('php://input');
     $data = json_decode($json, true);
 
-    $email = $data['email'];
-    $pass = $data['password'];
+    $email = isset($data['email']) ? filter_var($data['email'], FILTER_SANITIZE_EMAIL) : null;
+    $pass = isset($data['password']) ? filter_var($data['password'], FILTER_SANITIZE_STRING) : null;
 
     $result = '';
+    $response = array();
+    $error = true;
 
-    if ($email !== "" and $pass !== "") {
+    if ($email !== null && $pass !== null) {
         $query = "SELECT * FROM users WHERE email=:email";
         $statement = $db->prepare($query);
         $statement->bindParam(':email', $email, PDO::PARAM_STR);
         $statement->execute();
 
         $row = $statement->fetch(PDO::FETCH_ASSOC);
-        $error = false;
 
         if ($row) {
             if (!password_verify($pass, $row["password"])) {
                 $result = "Invalid Password";
-                $error = true;
                 error_log("Entered password: " . $pass);
                 error_log("Stored hashed password: " . $row["password"]);
                 error_log("Password verification result: " . var_export(password_verify($pass, $row["password"]), true));
             } else {
                 $result = "Logged in successfully! Redirecting...";
                 $error = false;
+                $response = array("result" => $result, "error" => $error, "access" => $row["access"], "userID" => $row["userID"], "name" => $row["name"]);
             }
-            $response[] = array("result" => $result, "error" => $error, "access" => $row["access"], "userID" => $row["userID"], "name" => $row["name"]);
         } else {
             $result = "Email does not exist";
-            $error = true;
         }
-
     } else {
-        $error = true;
+        $result = "Invalid or missing email or password";
     }
+
     $response[] = array("result" => $result, "error" => $error);
     echo json_encode($response);
 }
-
 ?>

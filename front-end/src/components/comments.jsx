@@ -129,12 +129,17 @@ const Comments = () => {
           <div className="user__comment__div" key={index}>
             <p>{comment.commentName ? comment.commentName : comment.name}</p>
             <p>{comment.content}</p>
-            <Link to={`/editComment/${comment.id}`}>
-              <button>Edit</button>
-            </Link>
-            <Link to={`/deleteComment/${comment.id}`}>
-              <button>Delete</button>
-            </Link>
+            {localStorage.getItem("login") === "true" &&
+              localStorage.getItem("access") === "1" && (
+                <div>
+                  <Link to={`/editComment/${comment.id}`}>
+                    <button>Edit</button>
+                  </Link>
+                  <Link to={`/deleteComment/${comment.id}`}>
+                    <button>Delete</button>
+                  </Link>
+                </div>
+              )}
           </div>
         ))}
       </div>

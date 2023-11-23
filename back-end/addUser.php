@@ -17,20 +17,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $result = "";
     $error = false;
+
     try {
         if ($name != "" && $password != "" && $password1 != "" && $email != "" && $access != "") {
             if ($password === $password1) {
-                $hashedPass = password_hash($password, PASSWORD_DEFAULT);
-                $query = "INSERT INTO users (name, email, password,access) VALUES (:name,:email, :password,:access)";
+                if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    $hashedPass = password_hash($password, PASSWORD_DEFAULT);
 
-                $statement = $db->prepare($query);
-                $statement->bindValue(":name", $name);
-                $statement->bindValue(":email", $email);
-                $statement->bindValue(":password", $hashedPass);
-                $statement->bindValue(":access", $access);
-                $statement->execute();
+                    $query = "INSERT INTO users (name, email, password, access) VALUES (:name, :email, :password, :access)";
+                    $statement = $db->prepare($query);
+                    $statement->bindValue(":name", $name);
+                    $statement->bindValue(":email", $email);
+                    $statement->bindValue(":password", $hashedPass);
+                    $statement->bindValue(":access", $access);
+                    $statement->execute();
 
-                $result = "User Added Succesfully";
+                    $result = "User Added Successfully";
+                } else {
+                    $result = "Invalid Email Format";
+                    $error = true;
+                }
+            } else {
+                $result = "Passwords do not match";
+                $error = true;
             }
         } else {
             $result = "Failed To Add User. Please Try Again";
@@ -38,8 +47,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     } catch (PDOException $e) {
         $error = true;
-        $response = json_encode(['error' => 'Database Access: ' . $e->getMessage()]);
+        $result = "Database Access: " . $e->getMessage();
     }
+
     $response = json_encode(["result" => $result, "error" => $error]);
     echo $response;
 }

@@ -4,27 +4,31 @@ import { Routes, Route, Link, useNavigate } from "react-router-dom";
 import Cube from "./cube";
 
 const Navbar = () => {
-    const [login, setLogin] = useState(localStorage.getItem("login"));
-
   return (
     <nav>
-      <ul className="nav__ul">
-        <li>
-          <Link to="/">
-            <Cube />
-          </Link>
-        </li>
-        <li>
-          <Link to="/content">ALGORITHMS</Link>
-        </li>
-        <li>
-          {login === "false" ? (
-            <Link to="/needToLogin">DASHBOARD</Link>
-          ) : (
+      {localStorage.getItem("login") === "true" ? (
+        <ul className="nav__ul">
+          <li>
+            <Link to="/">
+              <Cube />
+            </Link>
+          </li>
+          <li>
             <Link to="/dashboard">DASHBOARD</Link>
-          )}
-        </li>
-      </ul>
+          </li>
+        </ul>
+      ) : (
+        <ul className="nav__ul">
+          <li>
+            <Link to="/">
+              <Cube />
+            </Link>
+          </li>
+          <li>
+            <Link to="/content">ALGORITHMS</Link>
+          </li>
+        </ul>
+      )}
     </nav>
   );
 };

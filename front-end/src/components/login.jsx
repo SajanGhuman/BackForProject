@@ -49,16 +49,16 @@ const LOGIN = () => {
           return res.json();
         })
         .then((data) => {
-          console.log(data[0]);
+          console.log(data);
           if (data[0].error === true) {
             setError(data[0].result);
           } else {
             setMsg("Logged in successfully!! Redirecting...");
-            localStorage.setItem("login", "true");
-            localStorage.setItem("userID", data[0].userID);
-            localStorage.setItem("name", data[0].name);
+            localStorage.setItem("login", true);
+            localStorage.setItem("userID", data.userID);
+            localStorage.setItem("name", data.name);
             console.log(localStorage.getItem("name"));
-            if (data[0].access === 1) {
+            if (data.access === "1") {
               localStorage.setItem("access", "1");
             }
             setTimeout(() => {
@@ -76,7 +76,7 @@ const LOGIN = () => {
   };
 
   return (
-    <di v className="login__div">
+    <div className="login__div">
       {error !== "" ? (
         <div className="error__div__login">
           <p>{error}</p>
@@ -117,7 +117,7 @@ const LOGIN = () => {
           </button>
         </ul>
       </form>
-    </di>
+    </div>
   );
 };
 

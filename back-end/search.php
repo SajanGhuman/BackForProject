@@ -8,17 +8,17 @@ header('Content-Type: application/json');
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $json = file_get_contents('php://input');
     $data = json_decode($json, true);
-    $search = $data['search'];
-    $searchBy = $data['searchBy'];
+    $search = isset($data['search']) ? filter_var($data['search'], FILTER_SANITIZE_STRING) : null;
+    $searchBy = isset($data['searchBy']) ? filter_var($data['searchBy'], FILTER_SANITIZE_STRING) : null;
     $error = false;
 
     try {
-        if ($searchBy === 'name') {
+        if ($searchBy === 'name' && $search !== null) {
             $query = "SELECT * FROM algorithms WHERE name LIKE :search";
 
-            $Fsearch = filter_var($data['search'], FILTER_SANITIZE_STRING) . '%';
+            $Fsearch = $search . '%';
             $statement = $db->prepare($query);
-            $statement->bindValue(":search", $Fsearch);
+            $statement->bindValue(":search", $Fsearch, PDO::PARAM_STR);
             $statement->execute();
         }
 
@@ -36,5 +36,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     echo $response;
 }
-
 ?>

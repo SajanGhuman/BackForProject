@@ -9,34 +9,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $json = file_get_contents('php://input');
     $data = json_decode($json, true);
 
-    $algID = $data['algID'];
-    $name = $data['name'];
-    $notation = $data['notation'];
-    $type = $data['type'];
+    $algID = filter_var($data['algID'], FILTER_VALIDATE_INT);
 
-    $result = "";
-    $error = false;
-    try {
-        if ($algID !== '') {
+    if ($algID !== false && $algID !== null) {
+        $result = "";
+        $error = false;
+        try {
             $query = "UPDATE algorithms SET name = :name, notation = :notation, type = :type WHERE algID = :algID";
 
             $statement = $db->prepare($query);
-            $statement->bindValue(":name", $name);
-            $statement->bindValue(":notation", $notation);
-            $statement->bindValue(":type", $type);
-            $statement->bindValue(":algID", $algID);
+            $statement->bindValue(":name", $data['name']);
+            $statement->bindValue(":notation", $data['notation']);
+            $statement->bindValue(":type", $data['type']);
+            $statement->bindValue(":algID", $algID, PDO::PARAM_INT);
             $statement->execute();
 
             $result = "Algorithm Updated Successfully";
-        } else {
-            $result = "Failed To Add Algorithm. Please Try Again";
+        } catch (PDOException $e) {
             $error = true;
+            $response = json_encode(['error' => 'Database Access: ' . $e->getMessage()]);
         }
-    } catch (PDOException $e) {
-        $error = true;
-        $response = json_encode(['error' => 'Database Access: ' . $e->getMessage()]);
+        $response = json_encode(["result" => $result, "error" => $error]);
+        echo $response;
+    } else {
+        $response = json_encode(["error" => true, "message" => "Invalid or missing algID"]);
+        echo $response;
     }
-    $response = json_encode(["result" => $result, "error" => $error]);
-    echo $response;
 }
 ?>

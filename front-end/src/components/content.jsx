@@ -8,7 +8,7 @@ const Content = () => {
   /*--------------------Pagination Logic--------------------*/
   const [sortedData, setSortedData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [postPerPage, setPostPerPage] = useState(15);
+  const [postPerPage, setPostPerPage] = useState(4);
   const [paginatedData, setPaginatedData] = useState([]);
 
   useEffect(() => {
@@ -59,7 +59,7 @@ const Content = () => {
   };
 
   const handleClear = () => {
-    setSort({ ...sort, selected: "", type: "", search: "", searchBy: "" });
+    setSort({ ...sort, selected: "", type: "", search: "", searchBy: "name" });
     setSearchValue("");
   };
   useEffect(() => {
@@ -198,16 +198,24 @@ const Content = () => {
                   <thead>
                     <tr>
                       <th>AlgID</th>
+                      <th>Case</th>
                       <th>Name</th>
                       <th>Notation</th>
                       <th>Type</th>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody className="table__body">
                     {sortedData.length > 0 &&
                       paginatedData.map((item) => (
                         <tr key={item.algID}>
                           <td>{item.algID}</td>
+                          <td>
+                            <img
+                              src={`./algImages/pll${
+                                item.algID <= 21 ? item.algID : 1
+                              }.svg`}
+                            ></img>
+                          </td>
                           <td>{item.name}</td>
                           <td>{item.notation}</td>
                           <td>{item.type}</td>
@@ -246,37 +254,39 @@ const Content = () => {
             )}
           </div>
         ) : (
-          <table
-            className={
-              sort.type === "oll"
-                ? "oll__table"
-                : sort.type === "pll"
-                ? "pll__table"
-                : sort.type === "f2l"
-                ? "f2l__table"
-                : "alg__table"
-            }
-          >
-            <thead>
-              <tr>
-                <th>AlgID</th>
-                <th>Name</th>
-                <th>Notation</th>
-                <th>Type</th>
-              </tr>
-            </thead>
-            <tbody>
-              {sortedData.length > 0 &&
-                sortedData.map((item) => (
-                  <tr key={item.algID}>
-                    <td>{item.algID}</td>
-                    <td>{item.name}</td>
-                    <td>{item.notation}</td>
-                    <td>{item.type}</td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
+          <div className="content__container__2">
+            <table
+              className={
+                sort.type === "oll"
+                  ? "oll__table"
+                  : sort.type === "pll"
+                  ? "pll__table"
+                  : sort.type === "f2l"
+                  ? "f2l__table"
+                  : "alg__table"
+              }
+            >
+              <thead>
+                <tr>
+                  <th>AlgID</th>
+                  <th>Name</th>
+                  <th>Notation</th>
+                  <th>Type</th>
+                </tr>
+              </thead>
+              <tbody>
+                {sortedData.length > 0 &&
+                  sortedData.map((item) => (
+                    <tr key={item.algID}>
+                      <td>{item.algID}</td>
+                      <td>{item.name}</td>
+                      <td>{item.notation}</td>
+                      <td>{item.type}</td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
       <Comments />

@@ -6,11 +6,12 @@ header('Access-Control-Allow-Headers: Content-Type');
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    $id = $_GET['id'];
+    $id = filter_var($_GET['id'], FILTER_SANITIZE_NUMBER_INT);
+
     try {
-        $query = "SELECT comments.*, users.name FROM comments JOIN users ON comments.userID = users.userID WHERE id= :id";
+        $query = "SELECT comments.*, users.name FROM comments JOIN users ON comments.userID = users.userID WHERE id = :id";
         $statement = $db->prepare($query);
-        $statement->bindValue(":id", $id);
+        $statement->bindValue(":id", $id, PDO::PARAM_INT);
         $statement->execute();
 
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);

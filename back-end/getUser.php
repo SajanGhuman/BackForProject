@@ -6,22 +6,28 @@ header('Access-Control-Allow-Headers: Content-Type');
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    $userID = $_GET['userID'];
+    $userID = isset($_GET['userID']) ? filter_var($_GET['userID'], FILTER_SANITIZE_STRING) : null;
+
     try {
-        $query = "SELECT * FROM users WHERE userID = :userID";
-        $statement = $db->prepare($query);
-        $statement->bindValue(":userID", $userID);
-        $statement->execute();
+        if ($userID !== null) {
+            $query = "SELECT * FROM users WHERE userID = :userID";
+            $statement = $db->prepare($query);
+            $statement->bindValue(":userID", $userID);
+            $statement->execute();
 
-        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+            $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-        if (empty($result)) {
-            $response = json_encode(["error" => true, "message" => "No user Found"]);
+            if (empty($result)) {
+                $response = json_encode(["error" => true, "message" => "No user Found"]);
+            } else {
+                $response = json_encode(["result" => $result, "error" => false]);
+            }
+
+            echo $response;
         } else {
-            $response = json_encode(["result" => $result, "error" => false]);
+            $response = json_encode(["error" => true, "message" => "Invalid or missing user ID"]);
+            echo $response;
         }
-
-        echo $response;
     } catch (PDOException $e) {
         $response = json_encode(["error" => true, "message" => "Database error: " . $e->getMessage()]);
         echo $response;

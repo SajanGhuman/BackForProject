@@ -16,6 +16,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         if (empty($result)) {
             $response = json_encode(["error" => true, "message" => "No users found!!"]);
         } else {
+            foreach ($result as &$user) {
+                $user['userID'] = filter_var($user['userID'], FILTER_SANITIZE_NUMBER_INT);
+                $user['name'] = filter_var($user['name'], FILTER_SANITIZE_STRING);
+                $user['email'] = filter_var($user['email'], FILTER_SANITIZE_EMAIL);
+            }
+            // unset($user);
+
             $response = json_encode(["result" => $result, "error" => false]);
         }
 

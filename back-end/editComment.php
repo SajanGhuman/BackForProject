@@ -9,32 +9,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $json = file_get_contents('php://input');
     $data = json_decode($json, true);
 
-    $id = $data['id'];
-    $commentName = $data['commentName'];
-    $content = $data['content'];
+    $id = filter_var($data['id'], FILTER_VALIDATE_INT);
 
-    $result = "";
-    $error = false;
-    try {
-        if ($id !== '') {
+    if ($id !== false && $id !== null) {
+        $result = "";
+        $error = false;
+        try {
             $query = "UPDATE comments SET commentName = :commentName, content = :content WHERE id = :id";
 
             $statement = $db->prepare($query);
-            $statement->bindValue(":commentName", $commentName);
-            $statement->bindValue(":content", $content);
-            $statement->bindValue(":id", $id);
+            $statement->bindValue(":commentName", $data['commentName']);
+            $statement->bindValue(":content", $data['content']);
+            $statement->bindValue(":id", $id, PDO::PARAM_INT);
             $statement->execute();
 
             $result = "Comment Updated Successfully";
-        } else {
-            $result = "Failed To Add Algorithm. Please Try Again";
+        } catch (PDOException $e) {
             $error = true;
+            $response = json_encode(['error' => 'Database Access: ' . $e->getMessage()]);
         }
-    } catch (PDOException $e) {
-        $error = true;
-        $response = json_encode(['error' => 'Database Access: ' . $e->getMessage()]);
+        $response = json_encode(["result" => $result, "error" => $error]);
+        echo $response;
+    } else {
+        $response = json_encode(["error" => true, "message" => "Invalid or missing id"]);
+        echo $response;
     }
-    $response = json_encode(["result" => $result, "error" => $error]);
-    echo $response;
 }
 ?>
