@@ -22,7 +22,8 @@ const DeleteUsers = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
-    }).then(() => {
+    }).then((res) => {
+      console.log(res.json());
       navget("/dashboard");
     });
   };
@@ -32,7 +33,7 @@ const DeleteUsers = () => {
   };
   return (
     <div>
-      <h1 className="sure__text">Are you sure you want to delete this row?</h1>
+      <h1 className="sure__text">Are you sure you want to delete this User?</h1>
       <button className="go__back__button" onClick={goBack}>
         Go Back
       </button>

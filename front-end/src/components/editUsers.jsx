@@ -17,11 +17,6 @@ const EditUsers = () => {
 
   const navget = useNavigate();
 
-  // const data = {
-  //   userID: userID,
-  // };
-  // console.log(data);
-
   const handleChange = (e, type) => {
     switch (type) {
       case "name":
@@ -53,7 +48,9 @@ const EditUsers = () => {
 
   useEffect(() => {
     if (userID !== "") {
-      fetch(`http://localhost/react-project/back-end/getUser.php?userID=${userID}`)
+      fetch(
+        `http://localhost/react-project/back-end/getUser.php?userID=${userID}`
+      )
         .then((res) => {
           console.log(res);
           return res.json();
@@ -69,6 +66,9 @@ const EditUsers = () => {
               email: res.result[0].email || "",
               access: res.result[0].access || "",
             });
+            console.log(res.result[0].name);
+            console.log(res.result[0].email);
+            console.log(res.result[0].access);
           }
         })
         .catch((err) => {
@@ -80,7 +80,7 @@ const EditUsers = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (formData.userID !== "") {
-      fetch("http://localhost/react-project/back-end/editUser.php", {
+      fetch("http://localhost/react-project/back-end/updateUser.php", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -104,7 +104,6 @@ const EditUsers = () => {
           }
         })
         .catch((err) => {
-          setError(err);
           console.log("Error:", err);
         });
     } else {
@@ -156,9 +155,8 @@ const EditUsers = () => {
               id="access"
               onChange={(e) => handleChange(e, "access")}
             >
-              <option value="">Choose Access Level</option>
-              <option value="1">Admin</option>
               <option value="0">User</option>
+              <option value="1">Admin</option>
             </select>
           </li>
 

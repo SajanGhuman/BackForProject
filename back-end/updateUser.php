@@ -9,29 +9,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $json = file_get_contents('php://input');
     $data = json_decode($json, true);
 
-    $algID = isset($data['algID']) ? filter_var($data['algID'], FILTER_SANITIZE_NUMBER_INT) : null;
+    $userID = isset($data['userID']) ? filter_var($data['userID'], FILTER_SANITIZE_NUMBER_INT) : null;
     $name = isset($data['name']) ? filter_var($data['name'], FILTER_SANITIZE_STRING) : null;
-    $notation = isset($data['notation']) ? filter_var($data['notation'], FILTER_SANITIZE_STRING) : null;
-    $type = isset($data['type']) ? filter_var($data['type'], FILTER_SANITIZE_STRING) : null;
+    $email = isset($data['email']) ? filter_var($data['email'], FILTER_SANITIZE_STRING) : null;
+    $access = isset($data['access']) ? filter_var($data['access'], FILTER_SANITIZE_STRING) : null;
 
     $result = "";
     $error = false;
 
     try {
-        if ($algID !== null) {
-            $query = "UPDATE algorithms SET name = :name, notation = :notation, type = :type WHERE algID = :algID";
+            if ($userID !== null || $name !== null || $email !== null || $access !== null) {
+                $result = "";
+                $error = false;
+                $query = "UPDATE users SET name = :name, email = :email, access = :access WHERE userID = :userID";
 
-            $statement = $db->prepare($query);
-            $statement->bindValue(":name", $name, PDO::PARAM_STR);
-            $statement->bindValue(":notation", $notation, PDO::PARAM_STR);
-            $statement->bindValue(":type", $type, PDO::PARAM_STR);
-            $statement->bindValue(":algID", $algID, PDO::PARAM_INT);
-            $statement->execute();
+                $statement = $db->prepare($query);
+                $statement->bindValue(":userID", $userID, PDO::PARAM_INT);
+                $statement->bindValue(":name", $name, PDO::PARAM_STR);
+                $statement->bindValue(":email", $email, PDO::PARAM_STR);
+                $statement->bindValue(":access", $access, PDO::PARAM_STR);
+                $statement->execute();
 
-            $result = "Algorithm Updated Successfully";
-        } else {
-            $result = "Failed To Add Algorithm. Please Try Again";
+                $result = "User Updated Successfully";
+            }else {
+            $result = "Something was null";
             $error = true;
+            $response = json_encode(["result" => $result, "error" => $error]);
         }
     } catch (PDOException $e) {
         $error = true;

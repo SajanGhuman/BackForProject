@@ -36,7 +36,7 @@ const AddCategory = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (formData.categoryName !== "" && formData.id) {
+    if (formData.id !== "" && formData.categoryName !== "") {
       fetch("http://localhost/react-project/back-end/addCategory.php", {
         method: "POST",
         headers: {

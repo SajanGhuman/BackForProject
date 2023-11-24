@@ -57,10 +57,15 @@ const LOGIN = () => {
             localStorage.setItem("login", true);
             localStorage.setItem("userID", data.userID);
             localStorage.setItem("name", data.name);
-            console.log(localStorage.getItem("name"));
-            if (data.access === "1") {
-              localStorage.setItem("access", "1");
-            }
+            localStorage.setItem("email", data.email);
+            console.log(data.name);
+            console.log(data.userID);
+            console.log(data.access);
+            console.log(data.result);
+            console.log(data.error);
+            data.access === 1 &&
+              localStorage.setItem("access", data.access) &&
+              console.log("access is now 1");
             setTimeout(() => {
               navget("/dashboard");
             }, 3000);

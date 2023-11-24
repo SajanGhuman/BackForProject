@@ -8,8 +8,20 @@ header('Content-Type: application/json');
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $json = file_get_contents('php://input');
     $data = json_decode($json, true);
-
     $algID = filter_var($data['algID'], FILTER_VALIDATE_INT);
+
+    // if($data['type'] === "F2L"){
+    //     $categoryID = 1;
+    // }
+    // if($data['type'] === "OLL"){
+    //     $categoryID = 2;
+    // }
+    // if($data['type'] === "PLL"){
+    //     $categoryID = 3;
+    // }
+    // if($data['type'] === "COLL"){
+    //     $categoryID = 4;
+    // }
 
     if ($algID !== false && $algID !== null) {
         $result = "";

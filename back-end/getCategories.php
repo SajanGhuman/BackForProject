@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 
         if (empty($result)) {
-            $response = json_encode(["error" => true, "message" => "No user Found"]);
+            $response = json_encode(["error" => true, "message" => "No Category Found"]);
         } else {
             $response = json_encode(["result" => $result, "error" => false]);
         }

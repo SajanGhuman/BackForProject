@@ -86,14 +86,13 @@ const EditComment = () => {
           if (res.error === true) {
             setError("Could not update user!!Try again");
           } else {
-            setMsg("User updated successfully!! Redirecting...");
+            setMsg("Comment Updated Successfully!! Redirecting...");
             setTimeout(() => {
               navget("/dashboard");
             }, 3000);
           }
         })
         .catch((err) => {
-          setError(err);
           console.log("Error:", err);
         });
     } else {
@@ -103,7 +102,7 @@ const EditComment = () => {
   };
 
   return (
-    <div className="user__div__main">
+    <div className="comment__div__main">
       <div className="msg__div">
         {msg !== "" ? (
           <span className="edit__comment__msg">{msg}</span>
@@ -112,7 +111,7 @@ const EditComment = () => {
         )}
       </div>
       <form onSubmit={(e) => handleSubmit(e)}>
-        <ul className="add__ul">
+        <ul className="comment__ul">
           <li>
             <label htmlFor="name">Name:</label>
             <input
@@ -129,7 +128,9 @@ const EditComment = () => {
           </li>
           <li>
             <label htmlFor="content">Comment:</label>
-            <input
+            <textarea
+            cols={20}
+            rows={5}
             className="comment__content"
               type="text"
               name="content"

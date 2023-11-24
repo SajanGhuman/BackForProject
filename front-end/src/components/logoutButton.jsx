@@ -7,7 +7,7 @@ const Logout = () => {
   const handleLogoutClick = () => {
     setTimeout(() => {
       localStorage.setItem("login", "false");
-      localStorage.setItem("access", "0");
+      localStorage.setItem("access", "");
       localStorage.setItem("name", "");
       localStorage.setItem("email", "");
       navget("/");

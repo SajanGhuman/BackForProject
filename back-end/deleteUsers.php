@@ -9,8 +9,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $json = file_get_contents('php://input');
     $data = json_decode($json, true);
 
+    $userID = filter_var($data['userID'], FILTER_VALIDATE_INT);
     try {
-        $userID = filter_var($data['userID'], FILTER_VALIDATE_INT);
 
         if ($userID !== false && $userID !== null) {
             $query = "DELETE FROM users WHERE userID = :userID";
@@ -20,9 +20,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $rowCount = $statement->rowCount();
 
             if ($rowCount > 0) {
-                $response = json_encode(['success' => 'Row deleted successfully']);
+                $response = json_encode(['success' => 'User deleted successfully']);
             } else {
-                $response = json_encode(['error' => 'No rows deleted. Check if user exists.']);
+                $response = json_encode(['error' => 'Could not delete User deleted. Check if user exists.']);
             }
         } else {
             $response = json_encode(['error' => 'Invalid or missing userID']);

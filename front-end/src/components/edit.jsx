@@ -6,7 +6,7 @@ const EDIT = () => {
   const navget = useNavigate();
   const [error, setError] = useState("");
   const [msg, setMsg] = useState("");
-
+  const [categories, setCategories] = useState([]);
   const { algID } = useParams();
 
   const [formData, setFormData] = useState({
@@ -14,6 +14,7 @@ const EDIT = () => {
     name: "",
     notation: "",
     type: "",
+    categoryID: "",
   });
 
   const handleChange = (e, type) => {
@@ -62,6 +63,7 @@ const EDIT = () => {
               name: res.result[0].name || "",
               notation: res.result[0].notation || "",
               type: res.result[0].type || "",
+              categoryID: res.result[0].categoryID || "",
             });
           }
         })
@@ -70,6 +72,29 @@ const EDIT = () => {
         });
     }
   }, [algID]);
+
+  useEffect(() => {
+    {
+      fetch(`http://localhost/react-project/back-end/getCategories.php`)
+        .then((res) => {
+          console.log(res);
+          return res.json();
+        })
+        .then((res) => {
+          console.log(res);
+          if (res.error === true) {
+            setError("Error occured");
+          } else {
+            console.log(res.result);
+            console.log(res.result);
+            setCategories(res.result || []);
+          }
+        })
+        .catch((err) => {
+          console.log("Error:", err);
+        });
+    }
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -91,7 +116,7 @@ const EDIT = () => {
           if (res.error === true) {
             setError("Valiation Failed!! Try Again");
           } else {
-            setMsg("Algorithm Added successfully!! Redirecting...");
+            setMsg("Algorithm Updated successfully!! Redirecting...");
             setTimeout(() => {
               navget("/dashboard");
             }, 3000);
@@ -144,9 +169,11 @@ const EDIT = () => {
                 id="type"
                 onChange={(e) => handleChange(e, "type")}
               >
-                <option value="f2l">F2l</option>
-                <option value="oll">OLL</option>
-                <option value="pll">PLL</option>
+                {categories.map((category) => (
+                  <option value={category.categoryName}>
+                    {category.categoryName}
+                  </option>
+                ))}
               </select>
             </li>
             <button type="submit" className="add__submit">

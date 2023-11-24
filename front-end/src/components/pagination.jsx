@@ -12,47 +12,95 @@ const Pagination = ({
   }
   return (
     <div className="pagination__div">
-      <button
-        onClick={() => {
-          if (currentPage !== 1) setCurrentPage(1);
-        }}
-      >
-        {"<<<"}
-      </button>
-      <button
-        onClick={() => {
-          if (currentPage !== 1) setCurrentPage(currentPage - 1);
-        }}
-      >
-        {"Prev"}
-      </button>
-      {pages.map((page, index) => {
-        return (
+      {localStorage.getItem("Login") === "true" ? (
+        <div>
           <button
-            className={currentPage - 1 === index ? "active__paginate" : ""}
-            key={index}
-            onClick={() => setCurrentPage(page)}
+            onClick={() => {
+              if (currentPage !== 1) setCurrentPage(1);
+            }}
           >
-            {page}
+            {"<<<"}
           </button>
-        );
-      })}
-      <button
-        onClick={() => {
-          if (currentPage !== Math.ceil(totalPost / postPerPage))
-            setCurrentPage(currentPage + 1);
-        }}
-      >
-        {"Next"}
-      </button>
-      <button
-        onClick={() => {
-          if (currentPage !== Math.ceil(totalPost / postPerPage))
-            setCurrentPage(Math.ceil(totalPost / postPerPage));
-        }}
-      >
-        {">>>"}
-      </button>
+          <button
+            onClick={() => {
+              if (currentPage !== 1) setCurrentPage(currentPage - 1);
+            }}
+          >
+            {"Prev"}
+          </button>
+          {pages.map((page, index) => {
+            return (
+              <button
+                className={currentPage - 1 === index ? "active__paginate" : ""}
+                key={index}
+                onClick={() => setCurrentPage(page)}
+              >
+                {page}
+              </button>
+            );
+          })}
+          <button
+            onClick={() => {
+              if (currentPage !== Math.ceil(totalPost / postPerPage))
+                setCurrentPage(currentPage + 1);
+            }}
+          >
+            {"Next"}
+          </button>
+          <button
+            onClick={() => {
+              if (currentPage !== Math.ceil(totalPost / postPerPage))
+                setCurrentPage(Math.ceil(totalPost / postPerPage));
+            }}
+          >
+            {">>>"}
+          </button>
+        </div>
+      ) : (
+        <div className="pagination__out">
+          <button
+            onClick={() => {
+              if (currentPage !== 1) setCurrentPage(1);
+            }}
+          >
+            {"<<<"}
+          </button>
+          <button
+            onClick={() => {
+              if (currentPage !== 1) setCurrentPage(currentPage - 1);
+            }}
+          >
+            {"Prev"}
+          </button>
+          {pages.map((page, index) => {
+            return (
+              <button
+                className={currentPage - 1 === index ? "active__paginate" : ""}
+                key={index}
+                onClick={() => setCurrentPage(page)}
+              >
+                {page}
+              </button>
+            );
+          })}
+          <button
+            onClick={() => {
+              if (currentPage !== Math.ceil(totalPost / postPerPage))
+                setCurrentPage(currentPage + 1);
+            }}
+          >
+            {"Next"}
+          </button>
+          <button
+            onClick={() => {
+              if (currentPage !== Math.ceil(totalPost / postPerPage))
+                setCurrentPage(Math.ceil(totalPost / postPerPage));
+            }}
+          >
+            {">>>"}
+          </button>
+        </div>
+      )}
     </div>
   );
 };

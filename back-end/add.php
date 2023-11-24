@@ -12,17 +12,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = filter_var($data['name'], FILTER_SANITIZE_STRING);
     $notation = filter_var($data['notation'], FILTER_SANITIZE_STRING);
     $type = strtolower(filter_var($data['type'], FILTER_SANITIZE_STRING));
+    if (strtolower($type) === 'f2l') {
+        $categoryID = 1;
+    }
+    if (strtolower($type) === 'oll') {
+        $categoryID = 2;
+    }
+    if (strtolower($type) === 'pll') {
+        $categoryID = 3;
+    }
+    if (strtolower($type) === 'coll') {
+        $categoryID = 4;
+    }
 
     $result = "";
     $error = false;
     try {
         if ($name != "" && $notation != "" && $type != "") {
-            $query = "INSERT INTO algorithms (name, notation, type) VALUES (:name, :notation, :type)";
+            $query = "INSERT INTO algorithms (name, notation, type, categoryID) VALUES (:name, :notation, :type, :categoryID)";
 
             $statement = $db->prepare($query);
             $statement->bindValue(":name", $name);
             $statement->bindValue(":notation", $notation);
             $statement->bindValue(":type", $type);
+            $statement->bindValue(":categoryID", $categoryID);
             $statement->execute();
 
             $result = "Algorithm Added Successfully";

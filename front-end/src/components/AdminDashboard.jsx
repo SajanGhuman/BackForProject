@@ -41,7 +41,6 @@ const AdminDashboard = () => {
         </Link>
       </div>
       {show ? <Content handleShow={handleShow} /> : <EDIT />}
-      {/* <Comments /> */}
     </div>
   );
 };
