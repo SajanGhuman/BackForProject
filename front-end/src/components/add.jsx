@@ -9,9 +9,9 @@ const ADD = () => {
   const [categories, setCategories] = useState([]);
 
   const [formData, setFormData] = useState({
-    name: "",
-    notation: "",
-    type: "",
+    name: '',
+    notation: '',
+    type: '',
   });
 
   const handleChange = (e, type) => {
